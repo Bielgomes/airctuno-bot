@@ -1,0 +1,8 @@
+discord
+discord.py
+dnspython
+Pillow==8.3.2
+pymongo
+python-dotenv
+requests
+pytz==2013b
