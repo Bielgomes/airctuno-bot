@@ -1,0 +1,120 @@
+conversor = {
+  '<:pokeball:897889349411143740>': 'pokeball',
+  '<:greatball:888645319313727529>': 'greatball',
+  '<:ultraball:887870688390680597>': 'ultraball',
+  '<:masterball:887870688139018290>': 'masterball'
+}
+
+emojis = {
+  'pokeball': '<:pokeball:897889349411143740>',
+  'greatball': '<:greatball:888645319313727529>',
+  'ultraball': '<:ultraball:887870688390680597>',
+  'masterball': '<:masterball:887870688139018290>',
+  'cb': '<:cb:898244478672965702>',
+  'ub': '<:ub:898244478928838719>',
+  'rb': '<:rb:898244479243415642>',
+  'mb': '<:mb:897597753746673674>'
+}
+
+pokeball_open_image = {
+  '<:pokeball:897889349411143740>': '',
+  '<:greatball:888645319313727529>': '',
+  '<:ultraball:887870688390680597>': '',
+  '<:masterball:887870688139018290>': ''
+}
+
+pokeball_close_image = {
+  '<:pokeball:897889349411143740>': '',
+  '<:greatball:888645319313727529>': '',
+  '<:ultraball:887870688390680597>': '',
+  '<:masterball:887870688139018290>': ''
+}
+
+emojis_pokeball = {
+  'pokeball': '<:pokeball:897889349411143740>',
+  'greatball': '<:greatball:888645319313727529>',
+  'ultraball': '<:ultraball:887870688390680597>',
+  'masterball': '<:masterball:887870688139018290>',
+}
+
+badges_order = ['Developer', 'Collaborator', 'Betatester']
+
+badges = {
+  'developer': '<:developer:894069601078493255>',
+  'collaborator': '<:collaborator:894069601183346708>',
+  'betatester': '<:betatester:894069600763916339>'
+}
+
+pokemon_rarity = ['exclusive', 'ultra-beast', 'legendary', 'mythical', 'rare', 'uncommon', 'common']
+
+pokemon_rarity_prices = {
+  'exclusive': 0, 
+  'ultra-beast': 420, 
+  'legendary': 400, 
+  'mythical': 200, 
+  'rare': 100, 
+  'uncommon': 50, 
+  'common': 10
+}
+
+pokemon_rarity_ordem = {k:v for v,k in enumerate(['common', 'uncommon', 'rare', 'mythical', 'legendary', 'ultra-beast', 'exclusive'])}
+
+emoji_rarity = {
+  'exclusive': '🪐',
+  'ultra-beast': '💫',
+  'legendary': '🌟',
+  'mythical': '✨',
+  'rare': '⭐',
+  'uncommon': '🏵',
+  'common': '🔰'
+}
+
+chances_pokeball = {
+  'pokeball': {'ultra-beast': 1, 'legendary': 2, 'mythical': 5, 'rare': 20, 'uncommon': 40, 'common': 50},
+  'greatball': {'ultra-beast': 7, 'legendary': 9, 'mythical': 15, 'rare': 40, 'uncommon': 65, 'common': 75},
+  'ultraball': {'ultra-beast': 12, 'legendary': 15, 'mythical': 20, 'rare': 60, 'uncommon': 80, 'common': 90}
+}
+
+items_ordem = ['Pokeball', 'Greatball', 'Ultraball', 'Masterball', 'Cb', 'Ub', 'Rb', 'Mb']
+
+all_items = {
+  'Pokeball',
+  'Greatball',
+  'Ultraball',
+  'Masterball',
+  'Cb',
+  'Ub',
+  'Rb',
+  'Mb'
+}
+
+box_id = {'Cb': 1,'Ub': 2,'Rb': 3,'Mb': 4}
+
+box_image = {
+  'Cb': 'https://media.discordapp.net/attachments/887158781832749086/898244244203003984/cb.png',
+  'Ub': 'https://media.discordapp.net/attachments/887158781832749086/898244245322879076/ub.png',
+  'Rb': 'https://media.discordapp.net/attachments/887158781832749086/898244246925111306/rb.png',
+  'Mb': 'https://media.discordapp.net/attachments/887158781832749086/897596534626074724/mb.png'
+}
+
+price_itens = {
+  'Pokeball': 10,
+  'Greatball': 50,
+  'Ultraball': 100
+}
+
+classes = {
+  0: ['Treinador novato', 2400.0, 1000, 3],
+  1: ['Treinador novato II', 2280.0, 2000, 3],
+  2: ['Treinador novato III', 2160.0, 3000, 3],
+  3: ['Treinador', 2040.0, 4000, 4],
+  4: ['Treinador II', 1920.0, 5000, 4],
+  5: ['Treinador III', 1800.0, 6000, 4],
+  6: ['Treinador de Elite', 1680.0, 7000, 5],
+  7: ['Treinador de Elite II', 1560.0, 8000, 5],
+  8: ['Treinador de Elite III', 1440.0, 9000, 5],
+  9: ['Professor Pokémon', 1320.0, 10000, 6],
+  10: ['Professor Pokémon II', 1200.0, 11000, 6],
+  11: ['Professor Pokémon III', 1080.0, 12000, 6],
+  12: ['Mestre Pokémon', 600.0, 0, 8]
+}
