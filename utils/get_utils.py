@@ -66,7 +66,7 @@ async def get_pokemon_run_embed(pokemon):
   return embed
 
 async def get_none_pokemon_embed(user):
-  embed = discord.Embed(title=f"Você não encontrou pokemons", description="Que pena, mas agora não é hora de desanimar. Vá e procure outros pokemons.", color=0xFF1331)
+  embed = discord.Embed(title=f"Você não encontrou nada!", description="Que pena, mas agora não é hora de desanimar. Vá e procure outros pokemons.", color=0xFF1331)
   embed.set_author(name=f"{user.name}", icon_url=f"{user.avatar_url}")
   embed.set_image(url="https://images-ext-2.discordapp.net/external/gvYTfqkFmNuzjcbbYycwEAUHRka6DyDMMaEj4Pqsaio/https/media.discordapp.net/attachments/887158781832749086/888779438123253770/trade_nothing.png")
 
@@ -86,8 +86,8 @@ async def get_pokemon_price(pokemonName, quant):
 
 async def get_trade_embed(user, member, tradeItem1, tradeItem2):
   embed = discord.Embed(title=f"{member.name}​, o treinador {user.name} quer trocar com você!", color=0xFF003F)
-  embed.add_field(name=f"{user.name} te da", value=f"{tradeItem1['name']}", inline=True)
-  embed.add_field(name=f"Você da a {user.name}", value=f"{tradeItem2['name']}", inline=True)
+  embed.add_field(name=f"{user.name} recebe", value=f"{tradeItem2['name']}", inline=True)
+  embed.add_field(name=f"{user.name} recebe", value=f"{tradeItem1['name']}", inline=True)
 
   embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/898242329620647967/trade.png")
   embed.set_author(name=f"{user.name}", icon_url=f"{user.avatar_url}")

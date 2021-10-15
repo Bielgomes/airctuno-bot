@@ -5,7 +5,7 @@ import random
 import certifi
 from pymongo import MongoClient
 from dotenv import load_dotenv, find_dotenv
-from config import all_items, box_id, price_itens, conversor, badges, badges_order, classes, chances_pokeball, pokemon_rarity_prices
+from config import all_items, box_id, price_itens, conversor, badges, badges_order, classes, chances_pokeball
 
 load_dotenv(find_dotenv())
 database_connection = os.getenv('database_connection')
@@ -488,7 +488,7 @@ async def get_diary_bonus(guildId : int, id : int):
 
   pokeballs = random.randint(0, 5)
   ultrabolls = random.randint(0, 3)
-  pokecoins = random.randint(50, 200)
+  pokecoins = random.randint(400, 500)
 
   content = f"{pokecoins}$ Pokecoins\n"
   if pokeballs != 0:
