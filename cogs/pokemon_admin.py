@@ -163,7 +163,9 @@ class Pokemon_admin(commands.Cog):
   @commands.command(aliases=['pf'])
   async def prefix(self, ctx, prefix : str = None):
     if prefix != None:
-      await change_prefix(ctx.guild.id, prefix)
+      res = await change_prefix(ctx.guild.id, prefix)
+      if res == 400:
+        return await ctx.channel.send(f"Esse prefix é ``igual`` ao anterior")
       return await ctx.channel.send(f"Prefix alterado para ``{prefix}``")
     else:
       return await ctx.channel.send("Prefix inválido.")

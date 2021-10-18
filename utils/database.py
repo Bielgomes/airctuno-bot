@@ -28,9 +28,12 @@ async def get_prefix(bot, ctx):
     collection.insert_one({"_id": 0, "prefix": "$"})
     return '$'
 
-async def change_prefix(guildId : int, prefix : str):
+async def change_prefix(guildId : int, nPrefix : str):
   collection = db[str(guildId)]
-  collection.find_one_and_update({'_id': 0}, {'$set': {'prefix': prefix}})
+  prefix = collection.find_one({'_id': 0})['prefix']
+  if prefix == nPrefix:
+    return 400
+  collection.find_one_and_update({'_id': 0}, {'$set': {'prefix': nPrefix}})
 
 async def create_account(guildId : int, id : int):
     collection = db[str(guildId)]
