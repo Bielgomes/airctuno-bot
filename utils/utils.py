@@ -1,8 +1,8 @@
 import discord
 import os
 import random
-from config import emojis, emojis_pokeball, pokemon_rarity, pokemon_rarity_prices
-from api import get_pokemon
+from utils.config import emojis, emojis_pokeball, pokemon_rarity, pokemon_rarity_prices
+from utils.api import get_pokemon
 
 path = os.getcwd()
 

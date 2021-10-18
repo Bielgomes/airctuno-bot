@@ -5,7 +5,7 @@ import random
 import certifi
 from pymongo import MongoClient
 from dotenv import load_dotenv, find_dotenv
-from config import all_items, box_id, price_itens, conversor, badges, badges_order, classes, chances_pokeball
+from utils.config import all_items, box_id, price_itens, conversor, badges, badges_order, classes, chances_pokeball
 
 load_dotenv(find_dotenv())
 database_connection = os.getenv('database_connection')

@@ -2,7 +2,7 @@ import os
 import requests
 import json
 from dotenv import load_dotenv, find_dotenv
-from database import get_user_wishlist
+from utils.database import get_user_wishlist
 
 load_dotenv(find_dotenv())
 api_request = os.getenv('api_request')
