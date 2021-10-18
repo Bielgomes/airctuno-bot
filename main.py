@@ -2,7 +2,7 @@ import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv, find_dotenv
-from database import get_prefix
+from utils.database import get_prefix
 
 load_dotenv(find_dotenv())
 token = os.getenv('token')
