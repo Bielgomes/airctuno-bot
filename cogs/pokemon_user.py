@@ -4,10 +4,10 @@ from discord.ext import *
 from discord.ext import commands
 import math
 from collections import OrderedDict
-from database import *
-from api import *
-from utils.get_utils import *
-from config import items_ordem, emoji_rarity, pokemon_rarity_ordem, box_image
+from utils.database import *
+from utils.api import *
+from utils.utils import *
+from utils.config import items_ordem, emoji_rarity, pokemon_rarity_ordem, box_image
 
 class Pokemon_user(commands.Cog):
 

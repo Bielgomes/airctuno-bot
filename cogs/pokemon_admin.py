@@ -1,16 +1,15 @@
 import discord
 from discord.ext import commands
 import asyncio
-from database import *
-from api import *
-from utils.get_utils import *
+from utils.database import *
+from utils.api import *
+from utils.utils import *
 
 class Pokemon_admin(commands.Cog):
 
   def __init__(self, bot):
     self.bot = bot
 
-  @commands.cooldown(1, 2, commands.BucketType.user)
   @commands.is_owner()
   @commands.command(aliases=['sp'])
   async def spawn(self, ctx, pokemonSrc = None):
@@ -69,10 +68,7 @@ class Pokemon_admin(commands.Cog):
           embed = await get_pokemon_run_embed(pokemon)
           await msg.clear_reactions()
           return await msg.edit(embed=embed)
-  @spawn.error
-  async def spawn_error(self, ctx, error): pass
 
-  @commands.cooldown(1, 2, commands.BucketType.user)
   @commands.is_owner()
   @commands.command(aliases=['ap'])
   async def addpokemon(self, ctx, member : discord.Member = None, pokemonSrc = None, quant : int = None):
@@ -97,10 +93,7 @@ class Pokemon_admin(commands.Cog):
     await user_catch_pokemon(ctx.guild.id, user_id.id, pokemon, quant)
 
     await ctx.channel.send(f"Adicionados {quant}x de {pokemon['name']} ao pc de {user_id.name}.")
-  @addpokemon.error
-  async def addpokemon_error(self, ctx, error): pass
 
-  @commands.cooldown(1, 2, commands.BucketType.user)
   @commands.is_owner()
   @commands.command(aliases=['apc'])
   async def addpokecoins(self, ctx, member : discord.Member = None, quant : int = None):
@@ -112,10 +105,7 @@ class Pokemon_admin(commands.Cog):
     await user_inc_money(ctx.guild.id, member.id, quant)
 
     await ctx.channel.send(f"Foram adicionados {quant} pokecoin(s) ao inventário de {member.name}")
-  @addpokecoins.error
-  async def addpokecoins_error(self, ctx, error): pass
 
-  @commands.cooldown(1, 2, commands.BucketType.user)
   @commands.is_owner()
   @commands.command(aliases=['ait'])
   async def additem(self, ctx, member : discord.Member = None, itemName : str = None, quant : int = None):
@@ -133,10 +123,7 @@ class Pokemon_admin(commands.Cog):
     if res == 404: return await ctx.channel.send("Item inválido.")
 
     await ctx.channel.send(f"Adicionados {quant}x de {itemName} ao inventário de {member.name}")
-  @additem.error
-  async def additem_error(self, ctx, error): pass
 
-  @commands.cooldown(1, 2, commands.BucketType.user)
   @commands.is_owner()
   @commands.command()
   async def pokemonrating(self, ctx, num : int = None):
@@ -152,10 +139,7 @@ class Pokemon_admin(commands.Cog):
     embed = discord.Embed(title="Debugging", description=f'​ \n\n{content}', color=0x00ACE5)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/887158781832749086/891852083467264000/google-analytics.png")
     await ctx.channel.send(embed=embed)
-  @pokemonrating.error
-  async def pokemonrating_error(self, ctx, error): pass
 
-  @commands.cooldown(1, 2, commands.BucketType.user)
   @commands.is_owner()
   @commands.command()
   async def addbadge(self, ctx, member : discord.Member = None, badge = None):
@@ -173,8 +157,6 @@ class Pokemon_admin(commands.Cog):
       return await ctx.channel.send(f"{ctx.author.name}, o usuário já tem essa badge.")
 
     await ctx.channel.send(f"{ctx.author.name}, a badge foi adiciona ao usuário.")
-  @addbadge.error
-  async def addbadge_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.user)
   @commands.has_permissions(ban_members=True)
@@ -182,6 +164,7 @@ class Pokemon_admin(commands.Cog):
   async def prefix(self, ctx, prefix : str = None):
     if prefix != None:
       await change_prefix(ctx.guild.id, prefix)
+      return await ctx.channel.send(f"Prefix alterado para ``{prefix}``")
     else:
       return await ctx.channel.send("Prefix inválido.")
   @prefix.error
