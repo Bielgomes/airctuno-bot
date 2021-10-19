@@ -37,16 +37,15 @@ class Pokemon_admin(commands.Cog):
         await msg.clear_reactions()
         return await msg.edit(embed=embed)
       else:
-        use_pokeball = await user_use_pokeball(ctx.guild.id, user.id, str(reaction), pokemon)
+        use_pokeball = await user_use_pokeball(ctx.guild.id, user.id, str(reaction), pokemon['rarity'])
 
         if use_pokeball['code'] == 404:
           await ctx.channel.send(f"{user.name} não tem {use_pokeball['pokeball']}s")
           continue
-        
+
         if use_pokeball['code'] == 403: continue
 
         if use_pokeball['code'] == 200:
-          await msg.clear_reactions()
           await user_catch_pokemon(ctx.guild.id, user.id, pokemon)
 
           embed = discord.Embed(title=f"{pokemon['name']} Capturado!", description="Que belo pokemon para sua coleção. Agora vá e procure outros pokemons.", color=0x00FF85)
@@ -60,7 +59,8 @@ class Pokemon_admin(commands.Cog):
             embed.set_footer(text=f"Você ganhou {res['quant']}x de {res['mNameEmbed']}")
             await add_in_user_inventory(ctx.guild.id, user.id, res['mName'], res['quant'])
           
-          return await msg.edit(embed=embed)
+          await msg.edit(embed=embed)
+          return await msg.clear_reactions()
         else:
           embed = await get_pokemon_run_embed(pokemon)
           await msg.clear_reactions()

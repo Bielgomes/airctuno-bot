@@ -14,13 +14,13 @@ class Pokemon_user(commands.Cog):
   def __init__(self, bot):
       self.bot = bot
 
-  # @commands.cooldown(1, 2, commands.BucketType.guild)
+  @commands.cooldown(1, 2, commands.BucketType.guild)
   @commands.command(aliases=['p', 'pm'])
   async def pokemon(self, ctx):
-    # res = await user_in_cooldown(ctx.guild.id, ctx.author.id)
+    res = await user_in_cooldown(ctx.guild.id, ctx.author.id)
 
-    # if res['code'] == 408:
-    #   return await ctx.channel.send(f"{ctx.author.name}, aguarde `{res['time']}` para buscar pokemons novamente.")
+    if res['code'] == 408:
+      return await ctx.channel.send(f"{ctx.author.name}, aguarde `{res['time']}` para buscar pokemons novamente.")
 
     pokemon = await get_random_pokemon(ctx.guild.id, ctx.author.id)
 
@@ -57,7 +57,6 @@ class Pokemon_user(commands.Cog):
         if use_pokeball['code'] == 403: continue
 
         if use_pokeball['code'] == 200:
-          await msg.clear_reactions()
           await user_catch_pokemon(ctx.guild.id, user.id, pokemon)
 
           embed = discord.Embed(title=f"{pokemon['name']} Capturado!", description="Que belo pokemon para sua coleção. Agora vá e procure outros pokemons.", color=0x00FF85)
@@ -71,7 +70,8 @@ class Pokemon_user(commands.Cog):
             embed.set_footer(text=f"Você ganhou {res['quant']}x de {res['mNameEmbed']}")
             await add_in_user_inventory(ctx.guild.id, user.id, res['mName'], res['quant'])
           
-          return await msg.edit(embed=embed)
+          await msg.edit(embed=embed)
+          return await msg.clear_reactions()
         else:
           embed = await get_pokemon_run_embed(pokemon)
           await msg.clear_reactions()
@@ -507,7 +507,7 @@ class Pokemon_user(commands.Cog):
       quant = 1
 
     price = await get_pokemon_price(pokemon['rarity'], quant)
-    msg = await ctx.channel.send(f"{ctx.author.name}, você quer vender ``{quant}x`` de ``{pokemon['name']}`` por ``{price}``")
+    msg = await ctx.channel.send(f"{ctx.author.name}, você quer vender ``{quant}x`` de ``{pokemon['name']}`` por ``{price}`` pokecoins?")
     await msg.add_reaction('✅')
 
     def check(reaction, user):
@@ -525,8 +525,6 @@ class Pokemon_user(commands.Cog):
           return await ctx.channel.send(f"{ctx.author.name}, você não tem esse pokemon.")
         elif res == 401:
           return await ctx.channel.send(f"{ctx.author.name}, você não tem ``{quant}x`` de ``{pokemon['name']}``.")
-        elif res == 200:
-          return await ctx.channel.send(f"{ctx.author.name}, pokemon(s) vendido(s).")
   @release.error
   async def release_error(self, ctx, error): pass
 
