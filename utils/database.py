@@ -394,7 +394,6 @@ async def catch_successful(guildId, id, pokeball : str, pokemonRarity : str):
     chance = (chances_pokeball[pokeball][pokemonRarity] + user_class)
   except: pass
 
-  print(f"{pokeball} com user lv {user_class} com chance de {chance}%")
   if pokeball == 'masterball' or random.randint(0, 100) < chance: return 200
 
 async def user_catch_pokemon(guildId : int, id : int, pokemon, quant : int = None):

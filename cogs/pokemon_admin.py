@@ -15,8 +15,8 @@ class Pokemon_admin(commands.Cog):
   async def spawn(self, ctx, pokemonSrc = None):
     pokemon =  await pokemon_exists(pokemonSrc)
     
-    if pokemon == 204:
-      embed = await get_none_pokemon_embed(ctx.author)
+    if pokemon == 404:
+      embed = discord.Embed(description="Pokemon informado é inválido")
       return await ctx.channel.send(embed=embed)
 
     embed = await get_embed(pokemon, ctx.author)
@@ -52,19 +52,19 @@ class Pokemon_admin(commands.Cog):
           await msg.clear_reactions()
           await user_catch_pokemon(ctx.guild.id, user.id, pokemon)
 
-          embed = discord.Embed(title=f"{pokemon['name']} Capturado!", description="Que belo pokemon para sua coleção. Agora vá e capture mais!", color=0x00FF85)
+          embed = discord.Embed(title=f"{pokemon['name']} Capturado!", description="Que belo pokemon para sua coleção. Agora vá e procure outros pokemons.", color=0x00FF85)
           embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
           embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon['id']}.png")
-          embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/887402098721960036/png-transparent-poke-ball-pokemon-pokemon-rim-mobile-phones-pokemon-thumbnail.png?width=677&height=676")
+          embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/897888999698473020/pokeball.png")
           
           res = await get_misteryBox(pokemon['rarity'])
 
           if res != None:
             embed.set_footer(text=f"Você ganhou {res['quant']}x de {res['mNameEmbed']}")
             await add_in_user_inventory(ctx.guild.id, user.id, res['mName'], res['quant'])
-
+          
           return await msg.edit(embed=embed)
-        elif was_captured == None:
+        else:
           embed = await get_pokemon_run_embed(pokemon)
           await msg.clear_reactions()
           return await msg.edit(embed=embed)
