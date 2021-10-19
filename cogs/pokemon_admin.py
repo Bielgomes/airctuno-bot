@@ -37,7 +37,7 @@ class Pokemon_admin(commands.Cog):
         await msg.clear_reactions()
         return await msg.edit(embed=embed)
       else:
-        use_pokeball = await user_use_pokeball(ctx.guild.id, user.id, str(reaction))
+        use_pokeball = await user_use_pokeball(ctx.guild.id, user.id, str(reaction), pokemon)
 
         if use_pokeball['code'] == 404:
           await ctx.channel.send(f"{user.name} não tem {use_pokeball['pokeball']}s")
@@ -45,9 +45,7 @@ class Pokemon_admin(commands.Cog):
         
         if use_pokeball['code'] == 403: continue
 
-        was_captured = await catch_successful(ctx.guild.id, user.id, reaction, pokemon['rarity'])
-
-        if was_captured == 200:
+        if use_pokeball['code'] == 200:
           await msg.clear_reactions()
           await user_catch_pokemon(ctx.guild.id, user.id, pokemon)
 
@@ -67,7 +65,6 @@ class Pokemon_admin(commands.Cog):
           embed = await get_pokemon_run_embed(pokemon)
           await msg.clear_reactions()
           return await msg.edit(embed=embed)
-
   @commands.is_owner()
   @commands.command(aliases=['ap'])
   async def addpokemon(self, ctx, member : discord.Member = None, pokemonSrc = None, quant : int = None):

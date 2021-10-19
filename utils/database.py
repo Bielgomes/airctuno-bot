@@ -429,7 +429,7 @@ async def user_has_pokemon(guildId : int, id, pokemonName):
   else:
     return 200
 
-async def user_use_pokeball(guildId : int, id : int, pokeball):
+async def user_use_pokeball(guildId : int, id : int, pokeball, pokemonRarity : str):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
@@ -437,21 +437,27 @@ async def user_use_pokeball(guildId : int, id : int, pokeball):
     pokeball = conversor[pokeball].capitalize()
   except: return {'code': 403, 'pokeball': pokeball}
 
-  user_inventory = collection.find_one({'_id': id})['inv']
+  user = collection.find_one({'_id': id})
 
   try:
-    user_inventory[pokeball] < 0
+    user['inv'][pokeball]
   except:
     return {'code': 404, 'pokeball': pokeball}
+  else:
+    if user['inv'][pokeball] > 0:
+      user['inv'][pokeball] -= 1
+    if user['inv'][pokeball] <= 0:
+      del user['inv'][pokeball]
 
-  for i in user_inventory:
-    if i == pokeball:
-      if user_inventory[pokeball] > 0:
-        user_inventory[pokeball] -= 1
-        if user_inventory[pokeball] <= 0: del user_inventory[pokeball]
-        collection.find_one_and_update({'_id': id}, {'$set': {'inv': user_inventory}})
-        return {'code': 200, 'pokeball': pokeball}
+  try:
+    chance = (chances_pokeball[pokeball.lower()][pokemonRarity] + user['class'])
+  except: pass
 
+  collection.find_one_and_update({'_id': id}, {'$set': {'inv': user['inv']}})
+
+  if pokeball == 'Masterball' or random.randint(0, 100) < chance:
+    return {'code': 200}
+    
   return {'code': None}
 
 async def user_in_cooldown(guildId : int, id : int):

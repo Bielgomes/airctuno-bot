@@ -14,13 +14,13 @@ class Pokemon_user(commands.Cog):
   def __init__(self, bot):
       self.bot = bot
 
-  @commands.cooldown(1, 2, commands.BucketType.guild)
+  # @commands.cooldown(1, 2, commands.BucketType.guild)
   @commands.command(aliases=['p', 'pm'])
   async def pokemon(self, ctx):
-    res = await user_in_cooldown(ctx.guild.id, ctx.author.id)
+    # res = await user_in_cooldown(ctx.guild.id, ctx.author.id)
 
-    if res['code'] == 408:
-      return await ctx.channel.send(f"{ctx.author.name}, aguarde `{res['time']}` para buscar pokemons novamente.")
+    # if res['code'] == 408:
+    #   return await ctx.channel.send(f"{ctx.author.name}, aguarde `{res['time']}` para buscar pokemons novamente.")
 
     pokemon = await get_random_pokemon(ctx.guild.id, ctx.author.id)
 
@@ -48,17 +48,15 @@ class Pokemon_user(commands.Cog):
         await msg.clear_reactions()
         return await msg.edit(embed=embed)
       else:
-        use_pokeball = await user_use_pokeball(ctx.guild.id, user.id, str(reaction))
+        use_pokeball = await user_use_pokeball(ctx.guild.id, user.id, str(reaction), pokemon['rarity'])
 
         if use_pokeball['code'] == 404:
           await ctx.channel.send(f"{user.name} não tem {use_pokeball['pokeball']}s")
           continue
-        
+
         if use_pokeball['code'] == 403: continue
 
-        was_captured = await catch_successful(ctx.guild.id, user.id, reaction, pokemon['rarity'])
-
-        if was_captured == 200:
+        if use_pokeball['code'] == 200:
           await msg.clear_reactions()
           await user_catch_pokemon(ctx.guild.id, user.id, pokemon)
 
