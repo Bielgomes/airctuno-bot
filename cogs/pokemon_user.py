@@ -160,7 +160,7 @@ class Pokemon_user(commands.Cog):
   async def pokedex_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
-  @commands.command(aliases=['tr'])
+  @commands.command(aliases=['tr', 'troca'])
   async def trade(self, ctx, member : discord.Member = None, tradeItem1 = None, tradeItem2 = None):
     if member == None:
       return await ctx.channel.send(f"{ctx.author.name}, especifique um treinador com quem você quer trocar.") 
@@ -230,7 +230,7 @@ class Pokemon_user(commands.Cog):
   async def trade_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
-  @commands.command(aliases=['shop'])
+  @commands.command(aliases=['shop', 'loja'])
   async def pokeshop(self, ctx):
     embed = discord.Embed(title='Bem-vindo a loja', color=0xFF99CD)
     embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
@@ -244,7 +244,7 @@ class Pokemon_user(commands.Cog):
   async def pokestore_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
-  @commands.command(aliases=['b'])
+  @commands.command(aliases=['b', 'comprar'])
   async def buy(self, ctx, itemName : str = None, quant : int = None):
     if itemName == None:
       return await ctx.channel.send(f"{ctx.author.name}, Especifique o item a ser comprado.")
@@ -279,7 +279,7 @@ class Pokemon_user(commands.Cog):
   async def daily_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
-  @commands.command(aliases=['inv'])
+  @commands.command(aliases=['inv', 'inventario'])
   async def inventory(self, ctx):
     user_pokecoins, user_invetory = await get_user_inventory(ctx.guild.id, ctx.author.id)
 
@@ -299,7 +299,7 @@ class Pokemon_user(commands.Cog):
   async def inventory_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
-  @commands.command(aliases=['op'])
+  @commands.command(aliases=['op', 'abrir'])
   async def open(self, ctx, mName : str = None, quant : int = None):
     if quant == None: quant = 1
 
@@ -326,7 +326,7 @@ class Pokemon_user(commands.Cog):
   async def open_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
-  @commands.command(aliases=['pfl'])
+  @commands.command(aliases=['pfl', 'perfil'])
   async def profile(self, ctx, member : discord.Member = None):
     if member != None:
       user = member
@@ -358,7 +358,7 @@ class Pokemon_user(commands.Cog):
   async def profile_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
-  @commands.command(aliases=['eq'])
+  @commands.command(aliases=['eq', 'equipar'])
   async def equip(self, ctx, pokemonSrc = None):
     if pokemonSrc == None:
       return await ctx.channel.send(f"{ctx.author.name}, especifique um pokemon.")
@@ -383,7 +383,7 @@ class Pokemon_user(commands.Cog):
   async def equip_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
-  @commands.command(aliases=['uq'])
+  @commands.command(aliases=['uq', 'desequipar'])
   async def unequip(self, ctx):
     res = await user_unequip_pokemon(ctx.guild.id, ctx.author.id)
 
@@ -466,7 +466,7 @@ class Pokemon_user(commands.Cog):
   async def top_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
-  @commands.command(aliases=['tcu'])
+  @commands.command(aliases=['tcu', 'upgrade', 'up'])
   async def trainerclassupgrade(self, ctx):
     res = await get_class_utils(ctx.guild.id, ctx.author.id)
 
