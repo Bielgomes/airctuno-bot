@@ -80,8 +80,8 @@ async def pokemon_exists(pokemonSrc):
 
   return pokemon
 
-async def get_pokemon_price(pokemonName, quant):
-  price = pokemon_rarity_prices[pokemonName] * quant
+async def get_pokemon_price(pokemonRarity, quant):
+  price = pokemon_rarity_prices[pokemonRarity] * quant
   return price
 
 async def get_trade_embed(user, member, tradeItem1, tradeItem2):

@@ -49,12 +49,12 @@ pokemon_rarity = ['exclusive', 'ultra-beast', 'legendary', 'mythical', 'rare', '
 
 pokemon_rarity_prices = {
   'exclusive': 0,
-  'ultra-beast': 420,
-  'legendary': 400, 
-  'mythical': 200,
+  'ultra-beast': 4000,
+  'legendary': 1000,
+  'mythical': 450,
   'rare': 100,
   'uncommon': 50,
-  'common': 10
+  'common': 25
 }
 
 pokemon_rarity_ordem = {k:v for v,k in enumerate(['common', 'uncommon', 'rare', 'mythical', 'legendary', 'ultra-beast', 'exclusive'])}
@@ -70,7 +70,7 @@ emoji_rarity = {
 }
 
 chances_pokeball = {
-  'pokeball': {'ultra-beast': 1, 'legendary': 2, 'mythical': 5, 'rare': 20, 'uncommon': 40, 'common': 50},
+  'pokeball': {'ultra-beast': 1, 'legendary': 2, 'mythical': 3, 'rare': 10, 'uncommon': 30, 'common': 40},
   'greatball': {'ultra-beast': 7, 'legendary': 9, 'mythical': 15, 'rare': 40, 'uncommon': 65, 'common': 75},
   'ultraball': {'ultra-beast': 12, 'legendary': 15, 'mythical': 20, 'rare': 60, 'uncommon': 80, 'common': 90}
 }
