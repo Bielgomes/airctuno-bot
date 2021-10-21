@@ -245,7 +245,7 @@ class Pokemon_user(commands.Cog):
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
   @commands.command(aliases=['b', 'comprar'])
-  async def buy(self, ctx, itemName : str = None, quant : int = None):
+  async def buy(self, ctx, itemName = None, quant : int = None):
     if itemName == None:
       return await ctx.channel.send(f"{ctx.author.name}, Especifique o item a ser comprado.")
     

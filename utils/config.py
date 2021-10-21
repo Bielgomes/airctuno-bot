@@ -48,12 +48,12 @@ badges = {
 pokemon_rarity = ['exclusive', 'ultra-beast', 'legendary', 'mythical', 'rare', 'uncommon', 'common']
 
 pokemon_rarity_prices = {
-  'exclusive': 0, 
-  'ultra-beast': 420, 
+  'exclusive': 0,
+  'ultra-beast': 420,
   'legendary': 400, 
-  'mythical': 200, 
-  'rare': 100, 
-  'uncommon': 50, 
+  'mythical': 200,
+  'rare': 100,
+  'uncommon': 50,
   'common': 10
 }
 

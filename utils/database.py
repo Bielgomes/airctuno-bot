@@ -222,17 +222,22 @@ async def remove_in_user_wishlist(guildId : int, id : int, pokemon):
 
   collection.find_one_and_update({'_id':id}, {'$set': {'wishlist': user_wishlist}})
 
-async def get_user_wishlist(guildId : int, id : int, api = None):
+async def get_wishlist_ids(guildId : int, id : int):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
   user = collection.find_one({'_id': id})
 
-  if api == True:
-    content = []
-    for i in user['wishlist']:
-      content.append(user['wishlist'][i])
-    return {'content': content}
+  content = []
+  for i in user['wishlist']:
+    content.append(user['wishlist'][i])
+  return {'content': content}
+
+async def get_user_wishlist(guildId : int, id : int):
+  await create_account(guildId, id)
+  collection = db[str(guildId)]
+
+  user = collection.find_one({'_id': id})
 
   wishlist_len = len(user['wishlist'])
 
@@ -241,8 +246,8 @@ async def get_user_wishlist(guildId : int, id : int, api = None):
   content = ''
   aux = 1
   for i in user['wishlist']:
-      content += f"{aux}. {i}\n"
-      aux += 1
+    content += f"{aux}. {i}\n"
+    aux += 1
 
   return {'code': 200, 'content': content, 'len': wishlist_len, 'max': classes[user['class']][3]}
 

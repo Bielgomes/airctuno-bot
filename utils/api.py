@@ -2,16 +2,16 @@ import os
 import requests
 import json
 from dotenv import load_dotenv, find_dotenv
-from utils.database import get_user_wishlist
+from utils.database import get_wishlist_ids
 
 load_dotenv(find_dotenv())
 api_request = os.getenv('api_request')
-apt_requests_random = os.getenv('apt_requests_random')
+api_requests_random = os.getenv('api_requests_random')
 
 async def get_random_pokemon(guildId, id : int):
-  res = await get_user_wishlist(guildId, id, True)
+  res = await get_wishlist_ids(guildId, id)
 
-  request = requests.get(f"{apt_requests_random}{res}")
+  request = requests.get(f"{api_requests_random}{res}")
   
   data = json.loads(request.content)
  

@@ -41,7 +41,7 @@ async def get_misteryBox(pokemonRarity, res = None):
 
 async def get_embed(pokemon, user):
   embed_pokemon_details = {
-    'ultra-beast': [f"Como um {pokemon['name']} ultra beast apareceu? ele não faz parte da nossa dimenção.", 0x6930FF],
+    'ultra-beast': [f"Como um {pokemon['name']} ultra beast apareceu? ele não faz parte da nossa dimensão.", 0x6930FF],
     'legendary': [f"Um {pokemon['name']} lendário apareceu! absolutamente incrível.", 0xFFFF4A],
     'mythical': [f"Um {pokemon['name']} mítico apareceu? eu pensei que eram só mitos.", 0x51486B],
     'rare': [f"Uau, eu nunca vi um {pokemon['name']} por aqui! isso é raro.", 0x5858BD],
