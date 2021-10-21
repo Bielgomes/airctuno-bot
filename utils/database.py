@@ -494,7 +494,7 @@ async def get_diary_bonus(guildId : int, id : int):
     final_time = collection.find_one({'_id': id})['last_daily']
   except: pass
   else:
-    current_time = datetime.datetime.now(pytz.timezone('America/Sao_Paulo')).replace(microsecond=0,tzinfo=None)
+    current_time = datetime.datetime.now(pytz.timezone('America/Sao_Paulo')).replace(microsecond=0,tzinfo=None) - datetime.timedelta(hour=1)
     if current_time <= final_time:
       time = final_time - current_time
       return {'code': 408, 'time': time}
@@ -520,18 +520,6 @@ async def get_diary_bonus(guildId : int, id : int):
   final_time = datetime.datetime.now(pytz.timezone('America/Sao_Paulo')).replace(hour=0,minute=0,second=0,microsecond=0,tzinfo=None) + datetime.timedelta(days=1)
 
   collection.find_one_and_update({'_id': id}, {'$inc': {'pokecoins': pokecoins}, '$set': {'inv': user_inventory, 'last_daily': final_time}})
-
-  current_time = datetime.datetime.now(pytz.timezone('America/Sao_Paulo')).replace(microsecond=0,tzinfo=None)
-
-  print(current_time)
-
-  final_time = datetime.datetime.now(pytz.timezone('America/Sao_Paulo')).replace(hour=0,minute=0,second=0,microsecond=0,tzinfo=None) + datetime.timedelta(days=1)
-
-  print(final_time)
-
-  time = final_time - current_time
-
-  print(time)
 
   return {'code': 200, 'content': content}
 
