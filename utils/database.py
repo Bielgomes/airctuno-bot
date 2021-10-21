@@ -521,6 +521,18 @@ async def get_diary_bonus(guildId : int, id : int):
 
   collection.find_one_and_update({'_id': id}, {'$inc': {'pokecoins': pokecoins}, '$set': {'inv': user_inventory, 'last_daily': final_time}})
 
+  current_time = datetime.datetime.now(pytz.timezone('America/Sao_Paulo')).replace(microsecond=0,tzinfo=None)
+
+  print(current_time)
+
+  final_time = datetime.datetime.now(pytz.timezone('America/Sao_Paulo')).replace(hour=0,minute=0,second=0,microsecond=0,tzinfo=None) + datetime.timedelta(days=1)
+
+  print(final_time)
+
+  time = final_time - current_time
+
+  print(time)
+
   return {'code': 200, 'content': content}
 
 async def user_trade_with_two_pokemon(guildId : int, tradeOwner : int, tradeUser : int, pokemon1, pokemon2):
