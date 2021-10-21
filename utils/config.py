@@ -16,19 +16,19 @@ emojis = {
   'mb': '<:mb:897597753746673674>'
 }
 
-pokeball_open_image = {
-  '<:pokeball:899807489334333460>': '',
-  '<:greatball:888645319313727529>': '',
-  '<:ultraball:887870688390680597>': '',
-  '<:masterball:887870688139018290>': ''
-}
+# pokeball_open_image = {
+#   '<:pokeball:899807489334333460>': '',
+#   '<:greatball:888645319313727529>': '',
+#   '<:ultraball:887870688390680597>': '',
+#   '<:masterball:887870688139018290>': ''
+# }
 
-pokeball_close_image = {
-  '<:pokeball:899807489334333460>': '',
-  '<:greatball:888645319313727529>': '',
-  '<:ultraball:887870688390680597>': '',
-  '<:masterball:887870688139018290>': ''
-}
+# pokeball_close_image = {
+#   '<:pokeball:899807489334333460>': '',
+#   '<:greatball:888645319313727529>': '',
+#   '<:ultraball:887870688390680597>': '',
+#   '<:masterball:887870688139018290>': ''
+# }
 
 emojis_pokeball = {
   'pokeball': '<:pokeball:899807489334333460>',
@@ -104,17 +104,17 @@ price_itens = {
 }
 
 classes = {
-  0: ['Treinador novato', 2400.0, 1000, 3],
-  1: ['Treinador novato II', 2280.0, 2000, 3],
-  2: ['Treinador novato III', 2160.0, 3000, 3],
-  3: ['Treinador', 2040.0, 4000, 4],
-  4: ['Treinador II', 1920.0, 5000, 4],
-  5: ['Treinador III', 1800.0, 6000, 4],
-  6: ['Treinador de Elite', 1680.0, 7000, 5],
-  7: ['Treinador de Elite II', 1560.0, 8000, 5],
-  8: ['Treinador de Elite III', 1440.0, 9000, 5],
-  9: ['Professor Pokémon', 1320.0, 10000, 6],
-  10: ['Professor Pokémon II', 1200.0, 11000, 6],
-  11: ['Professor Pokémon III', 1080.0, 12000, 6],
-  12: ['Mestre Pokémon', 600.0, 0, 8]
+  0: ['Treinador novato', 1800.0, 1000, 3],
+  1: ['Treinador novato II', 1710.0, 2000, 3],
+  2: ['Treinador novato III', 1620.0, 3000, 3],
+  3: ['Treinador', 1530.0, 4000, 4],
+  4: ['Treinador II', 1440.0, 5000, 4],
+  5: ['Treinador III', 1350.0, 6000, 4],
+  6: ['Treinador de Elite', 1260.0, 7000, 5],
+  7: ['Treinador de Elite II', 1170.0, 8000, 5],
+  8: ['Treinador de Elite III', 1080.0, 9000, 5],
+  9: ['Professor Pokémon', 990.0, 10000, 6],
+  10: ['Professor Pokémon II', 900.0, 11000, 6],
+  11: ['Professor Pokémon III', 810.0, 12000, 6],
+  12: ['Mestre Pokémon', 720.0, 0, 8]
 }

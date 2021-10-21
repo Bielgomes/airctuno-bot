@@ -335,7 +335,7 @@ async def user_use_box(guildId : int, id : int, mName : str, quant : int):
   for i in range(0, quant):
     if box == 1:
       pokeballs += random.randint(1, 2)
-      pokecoins += random.randint(10, 20)
+      pokecoins += random.randint(25, 50)
     elif box == 2:
       greatballs += random.randint(1, 2)
       pokecoins += random.randint(50, 100)
@@ -396,7 +396,7 @@ async def catch_successful(guildId, id, pokeball : str, pokemonRarity : str):
     return 404
 
   try:
-    chance = (chances_pokeball[pokeball][pokemonRarity] + user_class)
+    chance = chances_pokeball[pokeball][pokemonRarity] + user_class
   except: pass
 
   if pokeball == 'masterball' or random.randint(0, 100) < chance: return 200
