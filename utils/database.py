@@ -494,7 +494,7 @@ async def get_diary_bonus(guildId : int, id : int):
     final_time = collection.find_one({'_id': id})['last_daily']
   except: pass
   else:
-    current_time = datetime.datetime.now(pytz.timezone('America/Sao_Paulo')).replace(microsecond=0,tzinfo=None) - datetime.timedelta(hour=1)
+    current_time = datetime.datetime.now(pytz.timezone('America/Santarem')).replace(microsecond=0,tzinfo=None)
     if current_time <= final_time:
       time = final_time - current_time
       return {'code': 408, 'time': time}
