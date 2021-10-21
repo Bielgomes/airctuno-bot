@@ -499,9 +499,9 @@ async def get_diary_bonus(guildId : int, id : int):
       time = final_time - current_time
       return {'code': 408, 'time': time}
 
-  pokeballs = random.randint(0, 5)
+  pokeballs = random.randint(1, 5)
   ultrabolls = random.randint(0, 3)
-  pokecoins = random.randint(400, 500)
+  pokecoins = random.randint(700, 800)
 
   content = f"{pokecoins}$ Pokecoins\n"
   if pokeballs != 0:
