@@ -24,10 +24,6 @@ class Pokemon_user(commands.Cog):
 
     pokemon = await get_random_pokemon(ctx.guild.id, ctx.author.id)
 
-    if pokemon == 204:
-      embed = await get_none_pokemon_embed(ctx.author)
-      return await ctx.channel.send(embed=embed)
-
     embed = await get_pokemon_embed(pokemon, ctx.author)
 
     msg = await ctx.channel.send(embed=embed)
@@ -288,7 +284,7 @@ class Pokemon_user(commands.Cog):
 
     user_invetory = OrderedDict(sorted(user_invetory.items(), key = lambda x: items_ordem.index(x[0])))
 
-    embed = discord.Embed(title='Inventário', color=0x00B7F0)
+    embed = discord.Embed(title='Mochila', color=0x00B7F0)
     embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
     embed.set_thumbnail(url='https://media.discordapp.net/attachments/887158781832749086/889256554954645524/mochila.png')
 

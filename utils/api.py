@@ -15,11 +15,7 @@ async def get_random_pokemon(guildId, id : int):
   
   data = json.loads(request.content)
  
-  try:
-    if data['statusCode'] == 204: 
-      return 204
-  except:
-    return {'id': data['id'], 'name': data['name'].replace('-',' ').capitalize(), 'rarity': data['rarity']}
+  return {'id': data['id'], 'name': data['name'].replace('-',' ').capitalize(), 'rarity': data['rarity']}
 
 async def get_pokemon(pokemon):
   pokemon = pokemon.replace(' ', '-').lower()
