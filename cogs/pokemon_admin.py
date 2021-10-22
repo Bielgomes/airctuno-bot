@@ -50,7 +50,7 @@ class Pokemon_admin(commands.Cog):
           await user_catch_pokemon(ctx.guild.id, user.id, pokemon, res)
 
           embed = discord.Embed(title=f"{pokemon['name']} Capturado!", description="Que belo pokemon para sua coleção. Agora vá e procure outros pokemons.", color=0x00FF85)
-          embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
+          embed.set_author(name=f"{user.name}", icon_url=f"{user.avatar_url}")
           embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon['id']}.png")
           embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/899811541971513384/pokeball.png")
 

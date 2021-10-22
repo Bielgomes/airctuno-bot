@@ -33,7 +33,7 @@ class Pokemon_user(commands.Cog):
     msg = await ctx.channel.send(embed=embed)
 
     emojis = await get_emoji('pokeballs')
-
+ 
     for i in emojis:
       await msg.add_reaction(emojis[i])
 
@@ -61,7 +61,7 @@ class Pokemon_user(commands.Cog):
           await user_catch_pokemon(ctx.guild.id, user.id, pokemon, res)
 
           embed = discord.Embed(title=f"{pokemon['name']} Capturado!", description="Que belo pokemon para sua coleção. Agora vá e procure outros pokemons.", color=0x00FF85)
-          embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
+          embed.set_author(name=f"{user.name}", icon_url=f"{user.avatar_url}")
           embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon['id']}.png")
           embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/899811541971513384/pokeball.png")
 
@@ -295,7 +295,7 @@ class Pokemon_user(commands.Cog):
     embed.add_field(name="Pokecoins", value=f"{user_pokecoins}$", inline=True)
 
     for i in user_invetory:
-      embed.add_field(name=f"{await get_emoji(i)}{i}", value=f"{user_invetory[i]}x", inline=True)
+      embed.add_field(name=f"{await get_emoji(i.lower())}{i}", value=f"{user_invetory[i]}x", inline=True)
 
     await ctx.channel.send(embed=embed)
   @bag.error

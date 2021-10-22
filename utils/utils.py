@@ -7,13 +7,13 @@ from utils.api import get_pokemon
 path = os.getcwd()
 
 async def get_emoji(Src = None):
-    if Src == 'pokeballs':
-      return emojis_pokeball
+  if Src == 'pokeballs':
+    return emojis_pokeball
 
-    try:
-      return all_emojis[Src]
-    except:
-      return 404
+  try:
+    return all_emojis[Src]
+  except:
+    return 404
 
 async def get_misteryBox(pokemonRarity, res = None):
   if pokemonRarity == 'common':

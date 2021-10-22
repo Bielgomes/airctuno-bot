@@ -1,5 +1,6 @@
 import os
 import datetime
+from typing import final
 import pytz
 import random
 import certifi
@@ -477,11 +478,12 @@ async def user_in_cooldown(guildId : int, id : int):
 
   user = collection.find_one({'_id': id})
 
-  final_time = user['pokemonTime'] + datetime.timedelta(seconds=classes[user['class']][1])
-
-  if datetime.datetime.now() <= final_time:
-    time = final_time.replace(microsecond=0) - datetime.datetime.now().replace(microsecond=0)
-    return {'code': 408, 'time': time}
+  if user['pokemonTime'] != '':
+    final_time = user['pokemonTime'] + datetime.timedelta(seconds=classes[user['class']][1])
+    
+    if datetime.datetime.now() <= final_time:
+      time = final_time.replace(microsecond=0) - datetime.datetime.now().replace(microsecond=0)
+      return {'code': 408, 'time': time}
 
   current_time = datetime.datetime.now()
   collection.find_one_and_update({'_id': id}, {'$set': {'pokemonTime': current_time}})
