@@ -5,7 +5,7 @@ import random
 import certifi
 from pymongo import MongoClient
 from dotenv import load_dotenv, find_dotenv
-from utils.config import all_items, box_id, price_itens, conversor, badges, badges_order, classes, chances_pokeball
+from utils.config import all_items, box_ids, price_itens, emojis_conversor, badges, badges_order, classes, chances_pokeball
 
 load_dotenv(find_dotenv())
 database_connection = os.getenv('database_connection')
@@ -38,7 +38,7 @@ async def change_prefix(guildId : int, nPrefix : str):
 async def create_account(guildId : int, id : int):
     collection = db[str(guildId)]
     if not collection.find_one({"_id": id}):
-      collection.insert_one({"_id": id, "class": 0, "pokecoins": 100, "inv": {}, "pokemons": {}, "wishlist": {}, "pokemon_equip": ""})
+      collection.insert_one({'_id': id, 'class': 0, 'pokecoins': 100, 'bag': {}, 'pokemons': {}, 'huntlist': {}, 'pokemon_equip': '', 'dailyTime': '', 'pokemonTime': ''})
     if not globalusers.find_one({'_id': id}):
       globalusers.insert_one({'_id': id, "badges": ['Betatester']})
 
@@ -75,13 +75,13 @@ async def get_guild_ranking(bot, guildId : int):
 
   return content
 
-async def get_user_inventory(guildId : int, id : int):
+async def get_user_bag(guildId : int, id : int):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
   user = collection.find_one({'_id': id})
 
-  return user['pokecoins'], user['inv']
+  return user['pokecoins'], user['bag']
 
 async def add_user_badge(guildId : int, id : int, badge : str):
   await create_account(guildId, id)
@@ -186,84 +186,84 @@ async def user_unequip_pokemon(guildId : int, id : int):
 
   collection.find_one_and_update({'_id':id}, {'$set': {'pokemon_equip': ""}})
 
-async def add_in_user_wishlist(guildId : int, id : int, pokemon):
+async def add_to_huntlist(guildId : int, id : int, pokemon):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
   user = collection.find_one({'_id': id})
 
-  if len(user['wishlist']) == classes[user['class']][3]:
+  if len(user['huntlist']) == classes[user['class']][3]:
     return 400
 
   try:
-    user['wishlist'][pokemon['name']]
+    user['huntlist'][pokemon['name']]
   except:
-    user['wishlist'][pokemon['name']] = pokemon['id']
+    user['huntlist'][pokemon['name']] = pokemon['id']
   else:
     return 401
 
-  collection.find_one_and_update({'_id': id}, {'$set': {'wishlist': user['wishlist']}})
+  collection.find_one_and_update({'_id': id}, {'$set': {'huntlist': user['huntlist']}})
 
-async def remove_in_user_wishlist(guildId : int, id : int, pokemon):
+async def remove_from_huntlist(guildId : int, id : int, pokemon):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
-  user_wishlist = collection.find_one({'_id': id})['wishlist']
+  user_huntlist = collection.find_one({'_id': id})['huntlist']
 
-  if len(user_wishlist) == 0:
+  if len(user_huntlist) == 0:
     return 400
 
   try:
-    user_wishlist[pokemon['name']]
+    user_huntlist[pokemon['name']]
   except:
     return 401
   else:
-    del user_wishlist[pokemon['name']]
+    del user_huntlist[pokemon['name']]
 
-  collection.find_one_and_update({'_id':id}, {'$set': {'wishlist': user_wishlist}})
+  collection.find_one_and_update({'_id':id}, {'$set': {'huntlist': user_huntlist}})
 
-async def get_wishlist_ids(guildId : int, id : int):
+async def get_huntlist_ids(guildId : int, id : int):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
   user = collection.find_one({'_id': id})
 
   content = []
-  for i in user['wishlist']:
-    content.append(user['wishlist'][i])
+  for i in user['huntlist']:
+    content.append(user['huntlist'][i])
   return {'content': content}
 
-async def get_user_wishlist(guildId : int, id : int):
+async def get_user_huntlist(guildId : int, id : int):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
   user = collection.find_one({'_id': id})
 
-  wishlist_len = len(user['wishlist'])
+  huntlist_len = len(user['huntlist'])
 
-  if wishlist_len == 0: return {'code': 400}
+  if huntlist_len == 0: return {'code': 400}
 
   content = ''
   aux = 1
-  for i in user['wishlist']:
+  for i in user['huntlist']:
     content += f"{aux}. {i}\n"
     aux += 1
 
-  return {'code': 200, 'content': content, 'len': wishlist_len, 'max': classes[user['class']][3]}
+  return {'code': 200, 'content': content, 'len': huntlist_len, 'max': classes[user['class']][3]}
 
-async def add_in_user_inventory(guildId : int, id : int, itemName : str, quant : int):
+async def add_in_user_bag(guildId : int, id : int, itemName : str, quant : int):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
   if itemName in all_items:
-    user_inventory = collection.find_one({'_id': id})['inv']
+    user_bag = collection.find_one({'_id': id})['bag']
 
     try:
-      user_inventory[itemName] += quant
+      user_bag[itemName] += quant
     except:
-      user_inventory[itemName] = quant
+      user_bag[itemName] = quant
 
-    collection.find_one_and_update({'_id': id}, {'$set': {'inv': user_inventory}})
+    collection.find_one_and_update({'_id': id}, {'$set': {'bag': user_bag}})
   else:
     return 404
 
@@ -294,11 +294,11 @@ async def user_buy_item(guildId : int, id : int, itemName, quant):
     return 507
 
   try:
-    user['inv'][itemName] += quant
+    user['bag'][itemName] += quant
   except:
-    user['inv'][itemName] = quant
+    user['bag'][itemName] = quant
 
-  collection.find_one_and_update({'_id': id}, {'$set': {'inv': user['inv']}, '$inc': {'pokecoins': -price}})
+  collection.find_one_and_update({'_id': id}, {'$set': {'bag': user['bag']}, '$inc': {'pokecoins': -price}})
 
   return
 
@@ -306,24 +306,24 @@ async def user_use_box(guildId : int, id : int, mName : str, quant : int):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
-  user_inventory = collection.find_one({'_id': id})['inv']
+  user_bag = collection.find_one({'_id': id})['bag']
 
   try:
-    box = box_id[mName]
+    box = box_ids[mName]
   except: return {'code': 400}
 
   try:
-    user_inventory[mName]
+    user_bag[mName]
   except:
     return {'code': 404}
 
-  if user_inventory[mName] < quant:
+  if user_bag[mName] < quant:
     return {'code': 401}
 
-  user_inventory[mName] -= quant
+  user_bag[mName] -= quant
 
-  if user_inventory[mName] <= 0:
-    del user_inventory[mName]
+  if user_bag[mName] <= 0:
+    del user_bag[mName]
 
   content = ''
   pokeballs = 0
@@ -354,33 +354,33 @@ async def user_use_box(guildId : int, id : int, mName : str, quant : int):
 
   if pokeballs != 0:
     try:
-      user_inventory['Pokeball'] += pokeballs
+      user_bag['Pokeball'] += pokeballs
     except:
-      user_inventory['Pokeball'] = pokeballs
+      user_bag['Pokeball'] = pokeballs
     content += f"{pokeballs}x Pokeballs\n"
 
   if greatballs != 0:
     try:
-      user_inventory['Greatball'] += greatballs
+      user_bag['Greatball'] += greatballs
     except:
-      user_inventory['Greatball'] = greatballs
+      user_bag['Greatball'] = greatballs
     content += f"{greatballs}x greatballs\n"
 
   if ultraballs != 0:
     try:
-      user_inventory['Ultraball'] += ultraballs
+      user_bag['Ultraball'] += ultraballs
     except:
-      user_inventory['Ultraball'] = ultraballs
+      user_bag['Ultraball'] = ultraballs
     content += f"{ultraballs}x Ultraballs\n"
 
   if masterballs != 0:
     try:
-      user_inventory['Masterball'] += masterballs
+      user_bag['Masterball'] += masterballs
     except:
-      user_inventory['Masterball'] = masterballs
+      user_bag['Masterball'] = masterballs
     content += f"{masterballs}x masterballs\n"
 
-  collection.find_one_and_update({'_id': id}, {'$inc': {'pokecoins': pokecoins}, '$set': {'inv': user_inventory}})
+  collection.find_one_and_update({'_id': id}, {'$inc': {'pokecoins': pokecoins}, '$set': {'bag': user_bag}})
 
   return {'code': 200, 'content': content}
 
@@ -391,7 +391,7 @@ async def catch_successful(guildId, id, pokeball : str, pokemonRarity : str):
   user_class = collection.find_one({'_id': id})['class']
 
   try:
-    pokeball = conversor[f"{pokeball}"]
+    pokeball = emojis_conversor[f"{pokeball}"]
   except:
     return 404
 
@@ -401,23 +401,29 @@ async def catch_successful(guildId, id, pokeball : str, pokemonRarity : str):
 
   if pokeball == 'masterball' or random.randint(0, 100) < chance: return 200
 
-async def user_catch_pokemon(guildId : int, id : int, pokemon, quant : int = None):
+async def user_catch_pokemon(guildId : int, id : int, pokemon, box = None, quant : int = None):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
   if quant == None: quant = 1
 
-  user_pokemons = collection.find_one({'_id': id})['pokemons']
+  user = collection.find_one({'_id': id})
 
   try:
-    user_pokemons[pokemon['name']]['quant'] += quant
+    user['pokemons'][pokemon['name']]['quant'] += quant
   except:
-    user_pokemons[pokemon['name']] = {
+    user['pokemons'][pokemon['name']] = {
       'quant': quant,
       'rarity': pokemon['rarity']
     }
-    
-  collection.find_one_and_update({'_id':id}, {'$set': {'pokemons': user_pokemons}})
+
+  if box != None:
+    try:
+      user['bag'][box['mName']] += box['quant']
+    except:
+      user['bag'][box['mName']] = box['quant']
+
+  collection.find_one_and_update({'_id':id}, {'$set': {'pokemons': user['pokemons'], 'bag': user['bag']}})
 
   return
 
@@ -439,26 +445,26 @@ async def user_use_pokeball(guildId : int, id : int, pokeball, pokemonRarity : s
   collection = db[str(guildId)]
 
   try:
-    pokeball = conversor[pokeball].capitalize()
+    pokeball = emojis_conversor[pokeball].capitalize()
   except: return {'code': 403, 'pokeball': pokeball}
 
   user = collection.find_one({'_id': id})
 
   try:
-    user['inv'][pokeball]
+    user['bag'][pokeball]
   except:
     return {'code': 404, 'pokeball': pokeball}
   else:
-    if user['inv'][pokeball] > 0:
-      user['inv'][pokeball] -= 1
-    if user['inv'][pokeball] <= 0:
-      del user['inv'][pokeball]
+    if user['bag'][pokeball] > 0:
+      user['bag'][pokeball] -= 1
+    if user['bag'][pokeball] <= 0:
+      del user['bag'][pokeball]
 
   try:
     chance = (chances_pokeball[pokeball.lower()][pokemonRarity] + user['class'])
   except: pass
 
-  collection.find_one_and_update({'_id': id}, {'$set': {'inv': user['inv']}})
+  collection.find_one_and_update({'_id': id}, {'$set': {'bag': user['bag']}})
 
   if pokeball == 'Masterball' or random.randint(0, 100) < chance:
     return {'code': 200}
@@ -469,34 +475,29 @@ async def user_in_cooldown(guildId : int, id : int):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
-  try:
-    user = collection.find_one({'_id': id})
-    final_time = user['last_pokemon'] + datetime.timedelta(seconds=classes[user['class']][1])
-  except:
-    pass
-  else:
-    if datetime.datetime.now() <= final_time:
-      time = final_time.replace(microsecond=0) - datetime.datetime.now().replace(microsecond=0)
-      return {'code': 408, 'time': time}
+  user = collection.find_one({'_id': id})
+
+  final_time = user['pokemonTime'] + datetime.timedelta(seconds=classes[user['class']][1])
+
+  if datetime.datetime.now() <= final_time:
+    time = final_time.replace(microsecond=0) - datetime.datetime.now().replace(microsecond=0)
+    return {'code': 408, 'time': time}
 
   current_time = datetime.datetime.now()
-  collection.find_one_and_update({'_id': id}, {'$set': {'last_pokemon': current_time}})
+  collection.find_one_and_update({'_id': id}, {'$set': {'pokemonTime': current_time}})
 
   return {'code': 200}
 
-async def get_diary_bonus(guildId : int, id : int):
+async def get_daily_bonus(guildId : int, id : int):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
-  user_inventory = collection.find_one({'_id': id})['inv']
+  user = collection.find_one({'_id': id})
 
-  try:
-    final_time = collection.find_one({'_id': id})['last_daily']
-  except: pass
-  else:
+  if user['dailyTime'] != '':
     current_time = datetime.datetime.now(pytz.timezone('America/Santarem')).replace(microsecond=0,tzinfo=None)
-    if current_time <= final_time:
-      time = final_time - current_time
+    if current_time <= user['dailyTime']:
+      time = user['dailyTime'] - current_time
       return {'code': 408, 'time': time}
 
   pokeballs = random.randint(1, 5)
@@ -506,20 +507,20 @@ async def get_diary_bonus(guildId : int, id : int):
   content = f"{pokecoins}$ Pokecoins\n"
   if pokeballs != 0:
     try:
-      user_inventory['Pokeball'] += pokeballs
+      user['bag']['Pokeball'] += pokeballs
     except:
-      user_inventory['Pokeball'] = pokeballs
+      user['bag']['Pokeball'] = pokeballs
     content += f"{pokeballs}x Pokeballs\n"
   if ultrabolls != 0:
     content += f"{ultrabolls}x Ultraball"
     try:
-      user_inventory['Ultraball'] += ultrabolls
+      user['bag']['Ultraball'] += ultrabolls
     except:
-      user_inventory['Ultraball'] = ultrabolls
+      user['bag']['Ultraball'] = ultrabolls
 
   final_time = datetime.datetime.now(pytz.timezone('America/Sao_Paulo')).replace(hour=0,minute=0,second=0,microsecond=0,tzinfo=None) + datetime.timedelta(days=1)
 
-  collection.find_one_and_update({'_id': id}, {'$inc': {'pokecoins': pokecoins}, '$set': {'inv': user_inventory, 'last_daily': final_time}})
+  collection.find_one_and_update({'_id': id}, {'$inc': {'pokecoins': pokecoins}, '$set': {'bag': user['bag'], 'dailyTime': final_time}})
 
   return {'code': 200, 'content': content}
 

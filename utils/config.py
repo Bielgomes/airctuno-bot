@@ -1,11 +1,11 @@
-conversor = {
+emojis_conversor = {
   '<:pokeball:899807489334333460>': 'pokeball',
   '<:greatball:888645319313727529>': 'greatball',
   '<:ultraball:887870688390680597>': 'ultraball',
   '<:masterball:887870688139018290>': 'masterball'
 }
 
-emojis = {
+all_emojis = {
   'pokeball': '<:pokeball:899807489334333460>',
   'greatball': '<:greatball:888645319313727529>',
   'ultraball': '<:ultraball:887870688390680597>',
@@ -15,20 +15,6 @@ emojis = {
   'rb': '<:rb:898244479243415642>',
   'mb': '<:mb:897597753746673674>'
 }
-
-# pokeball_open_image = {
-#   '<:pokeball:899807489334333460>': '',
-#   '<:greatball:888645319313727529>': '',
-#   '<:ultraball:887870688390680597>': '',
-#   '<:masterball:887870688139018290>': ''
-# }
-
-# pokeball_close_image = {
-#   '<:pokeball:899807489334333460>': '',
-#   '<:greatball:888645319313727529>': '',
-#   '<:ultraball:887870688390680597>': '',
-#   '<:masterball:887870688139018290>': ''
-# }
 
 emojis_pokeball = {
   'pokeball': '<:pokeball:899807489334333460>',
@@ -59,7 +45,7 @@ pokemon_rarity_prices = {
 
 pokemon_rarity_ordem = {k:v for v,k in enumerate(['common', 'uncommon', 'rare', 'mythical', 'legendary', 'ultra-beast', 'exclusive'])}
 
-emoji_rarity = {
+emojis_rarity = {
   'exclusive': '🪐',
   'ultra-beast': '💫',
   'legendary': '🌟',
@@ -88,9 +74,9 @@ all_items = {
   'Mb'
 }
 
-box_id = {'Cb': 1,'Ub': 2,'Rb': 3,'Mb': 4}
+box_ids = {'Cb': 1,'Ub': 2,'Rb': 3,'Mb': 4}
 
-box_image = {
+box_images = {
   'Cb': 'https://media.discordapp.net/attachments/887158781832749086/898244244203003984/cb.png',
   'Ub': 'https://media.discordapp.net/attachments/887158781832749086/898244245322879076/ub.png',
   'Rb': 'https://media.discordapp.net/attachments/887158781832749086/898244246925111306/rb.png',

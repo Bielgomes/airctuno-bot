@@ -1,23 +1,17 @@
 import discord
 import os
 import random
-from utils.config import emojis, emojis_pokeball, pokemon_rarity, pokemon_rarity_prices
+from utils.config import all_emojis, emojis_pokeball, pokemon_rarity, pokemon_rarity_prices
 from utils.api import get_pokemon
 
 path = os.getcwd()
 
-async def get_emoji(pokeballs : str = None, emoji : str = None):
-    if emoji == None and pokeballs == True:
+async def get_emoji(Src = None):
+    if Src == 'pokeballs':
       return emojis_pokeball
 
-    if emoji == None and pokeballs == False:
-      return emojis
-
-    if emoji != None:
-      emoji = emoji.lower()
-
     try:
-      return emojis[emoji]
+      return all_emojis[Src]
     except:
       return 404
 
@@ -39,7 +33,7 @@ async def get_misteryBox(pokemonRarity, res = None):
 
   return res
 
-async def get_embed(pokemon, user):
+async def get_pokemon_embed(pokemon, user):
   embed_pokemon_details = {
     'ultra-beast': [f"Como um {pokemon['name']} ultra beast apareceu? ele não faz parte da nossa dimensão.", 0x6930FF],
     'legendary': [f"Um {pokemon['name']} lendário apareceu! absolutamente incrível.", 0xFFFF4A],

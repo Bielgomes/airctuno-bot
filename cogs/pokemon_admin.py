@@ -18,10 +18,10 @@ class Pokemon_admin(commands.Cog):
     if pokemon == 404:
       return await ctx.channel.send("O pokemon informado é inválido.")
 
-    embed = await get_embed(pokemon, ctx.author)
+    embed = await get_pokemon_embed(pokemon, ctx.author)
     msg = await ctx.channel.send(embed=embed)
 
-    emojis = await get_emoji(True)
+    emojis = await get_emoji('pokeballs')
 
     for i in emojis:
       await msg.add_reaction(emojis[i])
@@ -34,8 +34,8 @@ class Pokemon_admin(commands.Cog):
         reaction, user = await self.bot.wait_for("reaction_add", timeout=19.0, check=check)
       except asyncio.TimeoutError:
         embed = await get_pokemon_run_embed(pokemon)
-        await msg.clear_reactions()
-        return await msg.edit(embed=embed)
+        await msg.edit(embed=embed)
+        return await msg.clear_reactions()
       else:
         use_pokeball = await user_use_pokeball(ctx.guild.id, user.id, str(reaction), pokemon['rarity'])
 
@@ -46,25 +46,23 @@ class Pokemon_admin(commands.Cog):
         if use_pokeball['code'] == 403: continue
 
         if use_pokeball['code'] == 200:
-          await user_catch_pokemon(ctx.guild.id, user.id, pokemon)
+          res = await get_misteryBox(pokemon['rarity'])
+          await user_catch_pokemon(ctx.guild.id, user.id, pokemon, res)
 
           embed = discord.Embed(title=f"{pokemon['name']} Capturado!", description="Que belo pokemon para sua coleção. Agora vá e procure outros pokemons.", color=0x00FF85)
           embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
           embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon['id']}.png")
           embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/899811541971513384/pokeball.png")
-          
-          res = await get_misteryBox(pokemon['rarity'])
 
           if res != None:
             embed.set_footer(text=f"Você ganhou {res['quant']}x de {res['mNameEmbed']}")
-            await add_in_user_inventory(ctx.guild.id, user.id, res['mName'], res['quant'])
           
           await msg.edit(embed=embed)
           return await msg.clear_reactions()
         else:
           embed = await get_pokemon_run_embed(pokemon)
-          await msg.clear_reactions()
-          return await msg.edit(embed=embed)
+          await msg.edit(embed=embed)
+          return await msg.clear_reactions()
   @commands.is_owner()
   @commands.command(aliases=['ap'])
   async def addpokemon(self, ctx, member : discord.Member = None, pokemonSrc = None, quant : int = None):
@@ -72,21 +70,21 @@ class Pokemon_admin(commands.Cog):
       return await ctx.channel.send(f"{ctx.author.name}, Especifique um treinador.")
     if pokemonSrc == None:
       return await ctx.channel.send(f"{ctx.author.name}, Especifique um pokemon para adicionar ao treinador.")
-    
-    pokemon =  await pokemon_exists(pokemonSrc)
-    
-    if pokemon == 404: 
-      return await ctx.channel.send("Pokemon não encontrado.")
 
-    if quant == None or quant <= 0 or quant >= 301:
+    pokemon = await pokemon_exists(pokemonSrc)
+
+    if pokemon == 404: 
+      return await ctx.channel.send(f"{ctx.author.name}, pokemon não encontrado.")
+
+    if quant == None or quant <= 0:
       quant = 1
 
     user_id = ctx.author
 
     if member != None:
       user_id = member
-    
-    await user_catch_pokemon(ctx.guild.id, user_id.id, pokemon, quant)
+
+    await user_catch_pokemon(ctx.guild.id, user_id.id, pokemon, None, quant)
 
     await ctx.channel.send(f"Adicionados {quant}x de {pokemon['name']} ao pc de {user_id.name}.")
 
@@ -114,7 +112,7 @@ class Pokemon_admin(commands.Cog):
 
     itemName = itemName.lower().capitalize()
 
-    res = await add_in_user_inventory(ctx.guild.id, member.id, itemName, quant)
+    res = await add_in_user_bag(ctx.guild.id, member.id, itemName, quant)
 
     if res == 404: return await ctx.channel.send("Item inválido.")
 

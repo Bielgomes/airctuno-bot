@@ -2,14 +2,14 @@ import os
 import requests
 import json
 from dotenv import load_dotenv, find_dotenv
-from utils.database import get_wishlist_ids
+from utils.database import get_huntlist_ids
 
 load_dotenv(find_dotenv())
 api_request = os.getenv('api_request')
 api_requests_random = os.getenv('api_requests_random')
 
 async def get_random_pokemon(guildId, id : int):
-  res = await get_wishlist_ids(guildId, id)
+  res = await get_huntlist_ids(guildId, id)
 
   request = requests.get(f"{api_requests_random}{res}")
   

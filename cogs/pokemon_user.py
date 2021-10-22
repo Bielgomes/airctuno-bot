@@ -7,7 +7,7 @@ from collections import OrderedDict
 from utils.database import *
 from utils.api import *
 from utils.utils import *
-from utils.config import items_ordem, emoji_rarity, pokemon_rarity_ordem, box_image, price_itens
+from utils.config import items_ordem, emojis_rarity, pokemon_rarity_ordem, box_images, price_itens
 
 class Pokemon_user(commands.Cog):
 
@@ -28,11 +28,11 @@ class Pokemon_user(commands.Cog):
       embed = await get_none_pokemon_embed(ctx.author)
       return await ctx.channel.send(embed=embed)
 
-    embed = await get_embed(pokemon, ctx.author)
+    embed = await get_pokemon_embed(pokemon, ctx.author)
 
     msg = await ctx.channel.send(embed=embed)
 
-    emojis = await get_emoji(True)
+    emojis = await get_emoji('pokeballs')
 
     for i in emojis:
       await msg.add_reaction(emojis[i])
@@ -45,8 +45,8 @@ class Pokemon_user(commands.Cog):
         reaction, user = await self.bot.wait_for("reaction_add", timeout=19.0, check=check)
       except asyncio.TimeoutError:
         embed = await get_pokemon_run_embed(pokemon)
-        await msg.clear_reactions()
-        return await msg.edit(embed=embed)
+        await msg.edit(embed=embed)
+        return await msg.clear_reactions()
       else:
         use_pokeball = await user_use_pokeball(ctx.guild.id, user.id, str(reaction), pokemon['rarity'])
 
@@ -57,25 +57,23 @@ class Pokemon_user(commands.Cog):
         if use_pokeball['code'] == 403: continue
 
         if use_pokeball['code'] == 200:
-          await user_catch_pokemon(ctx.guild.id, user.id, pokemon)
+          res = await get_misteryBox(pokemon['rarity'])
+          await user_catch_pokemon(ctx.guild.id, user.id, pokemon, res)
 
           embed = discord.Embed(title=f"{pokemon['name']} Capturado!", description="Que belo pokemon para sua coleção. Agora vá e procure outros pokemons.", color=0x00FF85)
           embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
           embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon['id']}.png")
           embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/899811541971513384/pokeball.png")
-          
-          res = await get_misteryBox(pokemon['rarity'])
 
           if res != None:
             embed.set_footer(text=f"Você ganhou {res['quant']}x de {res['mNameEmbed']}")
-            await add_in_user_inventory(ctx.guild.id, user.id, res['mName'], res['quant'])
           
           await msg.edit(embed=embed)
           return await msg.clear_reactions()
         else:
           embed = await get_pokemon_run_embed(pokemon)
-          await msg.clear_reactions()
-          return await msg.edit(embed=embed)
+          await msg.edit(embed=embed)
+          return await msg.clear_reactions()
   @pokemon.error
   async def pokemon_error(self, ctx, error): pass
 
@@ -109,7 +107,7 @@ class Pokemon_user(commands.Cog):
         if rare == 'rares':
           if actually_rarity != rarity:
             actually_rarity = rarity
-            content += f" \n{emoji_rarity[rarity]}**{rarity.capitalize()}({quants[rarity]}):**\n"
+            content += f" \n{emojis_rarity[rarity]}**{rarity.capitalize()}({quants[rarity]}):**\n"
         content += f"**{i} {user_pokemons[i]['quant']}x**\n"
       aux += 1
 
@@ -123,6 +121,11 @@ class Pokemon_user(commands.Cog):
     if pages > 1:
       await msg.add_reaction("⬅")
       await msg.add_reaction("➡")
+
+    await asyncio.sleep(180)
+    message = await ctx.channel.fetch_message(msg.id)
+    message.embeds[0].color = 0xfc0365
+    await msg.edit(embed=message.embeds[0])
 
   @personalcomputer.error
   async def personalcomputer_error(self, ctx, error): pass
@@ -235,9 +238,9 @@ class Pokemon_user(commands.Cog):
     embed = discord.Embed(title='Bem-vindo a loja', color=0xFF99CD)
     embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
     embed.set_thumbnail(url='https://media.discordapp.net/attachments/887158781832749086/889254271957221376/bolsa-de-compras.png')
-    embed.add_field(name=f"{await get_emoji(False, 'pokeball')}Pokeball", value=f"{price_itens['Pokeball']}", inline=True)
-    embed.add_field(name=f"{await get_emoji(False, 'greatball')}Greatball", value=f"{price_itens['Greatball']}", inline=True)
-    embed.add_field(name=f"{await get_emoji(False, 'ultraball')}Ultraball", value=f"{price_itens['Ultraball']}", inline=True)
+    embed.add_field(name=f"{await get_emoji('pokeball')}Pokeball", value=f"{price_itens['Pokeball']}", inline=True)
+    embed.add_field(name=f"{await get_emoji('greatball')}Greatball", value=f"{price_itens['Greatball']}", inline=True)
+    embed.add_field(name=f"{await get_emoji('ultraball')}Ultraball", value=f"{price_itens['Ultraball']}", inline=True)
     embed.set_footer(text='Use $buy Nome Quantidade para comprar')
     await ctx.channel.send(embed=embed)
   @pokeshop.error
@@ -266,7 +269,7 @@ class Pokemon_user(commands.Cog):
   @commands.cooldown(1, 2, commands.BucketType.guild)
   @commands.command()
   async def daily(self, ctx):
-    content = await get_diary_bonus(ctx.guild.id, ctx.author.id)
+    content = await get_daily_bonus(ctx.guild.id, ctx.author.id)
 
     if content['code'] == 408:
       return await ctx.channel.send(f"{ctx.author.name}, você já pegou seu bônus diario. Aguarde `{content['time']}` para pegá-lo novamente.")
@@ -279,9 +282,9 @@ class Pokemon_user(commands.Cog):
   async def daily_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
-  @commands.command(aliases=['inv', 'inventario'])
-  async def inventory(self, ctx):
-    user_pokecoins, user_invetory = await get_user_inventory(ctx.guild.id, ctx.author.id)
+  @commands.command(aliases=['bg', 'mochila'])
+  async def bag(self, ctx):
+    user_pokecoins, user_invetory = await get_user_bag(ctx.guild.id, ctx.author.id)
 
     user_invetory = OrderedDict(sorted(user_invetory.items(), key = lambda x: items_ordem.index(x[0])))
 
@@ -292,10 +295,10 @@ class Pokemon_user(commands.Cog):
     embed.add_field(name="Pokecoins", value=f"{user_pokecoins}$", inline=True)
 
     for i in user_invetory:
-      embed.add_field(name=f"{await get_emoji(False, i)}{i}", value=f"{user_invetory[i]}x", inline=True)
+      embed.add_field(name=f"{await get_emoji(i)}{i}", value=f"{user_invetory[i]}x", inline=True)
 
     await ctx.channel.send(embed=embed)
-  @inventory.error
+  @bag.error
   async def inventory_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
@@ -320,7 +323,7 @@ class Pokemon_user(commands.Cog):
 
     embed = discord.Embed(title=f"Abriu {quant}x de {mName} e ganhou", description=f"**{res['content']}**", color=0x80B6FC)
     embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
-    embed.set_thumbnail(url=box_image[mName])
+    embed.set_thumbnail(url=box_images[mName])
     await ctx.channel.send(embed=embed)
   @open.error
   async def open_error(self, ctx, error): pass
@@ -396,22 +399,22 @@ class Pokemon_user(commands.Cog):
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
   @commands.command()
-  async def wishlist(self, ctx):
-    res = await get_user_wishlist(ctx.guild.id, ctx.author.id)
+  async def huntlist(self, ctx):
+    res = await get_user_huntlist(ctx.guild.id, ctx.author.id)
   
     if res['code'] == 400:
-      return await ctx.channel.send(f"{ctx.author.name}, você não tem nenhum pokemon em sua wishlist.")
+      return await ctx.channel.send(f"{ctx.author.name}, você não tem nenhum pokemon em sua huntlist.")
 
-    embed = discord.Embed(title=f"Wishlist ({res['len']}/{res['max']})", description=f"{res['content']}", color=0xFFF5D2)
+    embed = discord.Embed(title=f"Huntlist ({res['len']}/{res['max']})", description=f"{res['content']}", color=0xFFF5D2)
     embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
-    embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/893168340028227635/wishlist.png")
+    embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/900915566783660053/huntlist.png")
     await ctx.channel.send(embed=embed)
-  @wishlist.error
-  async def wishlist_error(self, ctx, error): pass
+  @huntlist.error
+  async def huntlist_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
   @commands.command()
-  async def wish(self, ctx, pokemonSrc = None):
+  async def hunt(self, ctx, pokemonSrc = None):
     if pokemonSrc == None:
       return await ctx.channel.send(f"{ctx.author.name}, especifique um pokemon.")
       
@@ -420,20 +423,20 @@ class Pokemon_user(commands.Cog):
     if pokemon == 404: 
       return await ctx.channel.send(f"{ctx.author.name}, pokemon não encontrado.")
 
-    res = await add_in_user_wishlist(ctx.guild.id, ctx.author.id, pokemon)
+    res = await add_to_huntlist(ctx.guild.id, ctx.author.id, pokemon)
 
     if res == 400:
-      return await ctx.channel.send(f"{ctx.author.name}, você atingiu o limite de sua wishlist.")
+      return await ctx.channel.send(f"{ctx.author.name}, você atingiu o limite de sua huntlist.")
     elif res == 401:
-      return await ctx.channel.send(f"{ctx.author.name}, esse pokemon já está em sua wishlist.")
+      return await ctx.channel.send(f"{ctx.author.name}, esse pokemon já está em sua huntlist.")
 
     await ctx.message.add_reaction("✅")
-  @wish.error
-  async def wish_error(self, ctx, error): pass
+  @hunt.error
+  async def hunt_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
   @commands.command()
-  async def unwish(self, ctx, pokemonSrc = None):
+  async def huntremove(self, ctx, pokemonSrc = None):
     if pokemonSrc == None:
       return await ctx.channel.send(f"{ctx.author.name}, especifique um pokemon.")
       
@@ -442,16 +445,16 @@ class Pokemon_user(commands.Cog):
     if pokemon == 404: 
       return await ctx.channel.send(f"{ctx.author.name}, pokemon não encontrado.")
 
-    res = await remove_in_user_wishlist(ctx.guild.id, ctx.author.id, pokemon)
+    res = await remove_from_huntlist(ctx.guild.id, ctx.author.id, pokemon)
 
     if res == 400:
-      return await ctx.channel.send(f"{ctx.author.name}, Você não tem nenhum pokemon em sua wishlist.")
+      return await ctx.channel.send(f"{ctx.author.name}, Você não tem nenhum pokemon em sua huntlist.")
     elif res == 401:
-      return await ctx.channel.send(f"{ctx.author.name}, Esse pokemon não está na sua wishlist.")
+      return await ctx.channel.send(f"{ctx.author.name}, Esse pokemon não está na sua huntlist.")
 
     await ctx.message.add_reaction("✅")
-  @unwish.error
-  async def unwish_error(self, ctx, error): pass
+  @huntremove.error
+  async def huntremove_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
   @commands.command()
@@ -531,7 +534,7 @@ class Pokemon_user(commands.Cog):
   @commands.Cog.listener()
   async def on_reaction_add(self, reaction, user):
     if user != self.bot.user and str(reaction) == '⬅' or str(reaction) == '➡':
-      if 'AirctunoBot Desenvolvemento#7711' == str(user): return
+      if 'AirctunoBot Desenvolvemento#7711' == str(user) or str(reaction.message.embeds[0].color) == '#fc0365': return
 
       rare = ''
       color = 0xfc0367
@@ -540,7 +543,7 @@ class Pokemon_user(commands.Cog):
         color = 0xfc0366
 
       quants = []
-      
+
       try:
         footer = reaction.message.embeds[0].footer.text.split(' ')
         author = await self.bot.fetch_user(reaction.message.embeds[0].author.icon_url.split('/')[4])
@@ -583,7 +586,7 @@ class Pokemon_user(commands.Cog):
           if actually_rarity != rarity:
             actually_rarity = rarity
             if not aux < start and aux < end:
-              content += f" \n{emoji_rarity[rarity]}**{rarity.capitalize()}({quants[rarity]}):**\n"
+              content += f" \n{emojis_rarity[rarity]}**{rarity.capitalize()}({quants[rarity]}):**\n"
         if not aux < start and aux < end:
           content += f"**{i} {user_pokemons[i]['quant']}x**\n"
         aux += 1
@@ -598,7 +601,7 @@ class Pokemon_user(commands.Cog):
   @commands.Cog.listener()
   async def on_reaction_remove(self, reaction, user):
     if user != self.bot.user and str(reaction) == '⬅' or str(reaction) == '➡':
-      if 'AirctunoBot Desenvolvemento#7711' == str(user): return
+      if 'AirctunoBot Desenvolvemento#7711' == str(user) or str(reaction.message.embeds[0].color) == '#fc0365': return
 
       rare = ''
       color = 0xfc0367
@@ -649,7 +652,7 @@ class Pokemon_user(commands.Cog):
           if actually_rarity != rarity:
             actually_rarity = rarity
             if not aux < start and aux < end:
-              content += f" \n{emoji_rarity[rarity]}**{rarity.capitalize()}({quants[rarity]}):**\n"
+              content += f" \n{emojis_rarity[rarity]}**{rarity.capitalize()}({quants[rarity]}):**\n"
         if not aux < start and aux < end:
           content += f"**{i} {user_pokemons[i]['quant']}x**\n"
         aux += 1
