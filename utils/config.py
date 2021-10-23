@@ -17,10 +17,10 @@ all_emojis = {
 }
 
 emojis_pokeball = {
-  '<:pokeball:899807489334333460>',
-  '<:greatball:888645319313727529>',
-  '<:ultraball:887870688390680597>',
-  '<:masterball:887870688139018290>',
+  'pokeball': '<:pokeball:899807489334333460>',
+  'greatball': '<:greatball:888645319313727529>',
+  'ultraball': '<:ultraball:887870688390680597>',
+  'masterball': '<:masterball:887870688139018290>',
 }
 
 badges_order = ['Developer', 'Collaborator', 'Betatester']

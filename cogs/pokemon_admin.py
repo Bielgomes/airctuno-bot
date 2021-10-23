@@ -24,7 +24,7 @@ class Pokemon_admin(commands.Cog):
     msg = await ctx.channel.send(embed=embed)
 
     for i in emojis_pokeball:
-      await msg.add_reaction(i)
+      await msg.add_reaction(emojis_pokeball[i])
 
     def check(reaction, user):
         return user != self.bot.user and reaction.message.id == msg.id
