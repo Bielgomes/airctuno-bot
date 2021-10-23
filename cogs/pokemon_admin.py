@@ -19,12 +19,11 @@ class Pokemon_admin(commands.Cog):
       return await ctx.channel.send("O pokemon informado é inválido.")
 
     embed = await get_pokemon_embed(pokemon, ctx.author)
+    
     msg = await ctx.channel.send(embed=embed)
 
-    emojis = await get_emoji('pokeballs')
-
-    for i in emojis:
-      await msg.add_reaction(emojis[i])
+    for i in await get_emoji('pokeballs'):
+      await msg.add_reaction(i)
 
     def check(reaction, user):
         return user != self.bot.user and reaction.message.id == msg.id

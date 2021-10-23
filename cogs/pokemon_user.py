@@ -1,4 +1,5 @@
 import asyncio
+from datetime import time
 import discord
 from discord.ext import *
 from discord.ext import commands
@@ -28,10 +29,8 @@ class Pokemon_user(commands.Cog):
 
     msg = await ctx.channel.send(embed=embed)
 
-    emojis = await get_emoji('pokeballs')
- 
-    for i in emojis:
-      await msg.add_reaction(emojis[i])
+    for i in await get_emoji('pokeballs'):
+      await msg.add_reaction(i)
 
     def check(reaction, user):
         return user != self.bot.user and reaction.message.id == msg.id
@@ -286,7 +285,7 @@ class Pokemon_user(commands.Cog):
 
     embed = discord.Embed(title='Mochila', color=0x00B7F0)
     embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
-    embed.set_thumbnail(url='https://media.discordapp.net/attachments/887158781832749086/889256554954645524/mochila.png')
+    embed.set_thumbnail(url='https://media.discordapp.net/attachments/887158781832749086/901580880164831313/mochila.png')
 
     embed.add_field(name="Pokecoins", value=f"{user_pokecoins}$", inline=True)
 
@@ -453,7 +452,7 @@ class Pokemon_user(commands.Cog):
   async def huntremove_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
-  @commands.command()
+  @commands.command(aliases=['ranking'])
   async def top(self, ctx):
     content = await get_guild_ranking(self.bot, ctx.guild.id)
 
@@ -465,8 +464,8 @@ class Pokemon_user(commands.Cog):
   async def top_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
-  @commands.command(aliases=['tcu', 'upgrade', 'up'])
-  async def trainerclassupgrade(self, ctx):
+  @commands.command(aliases=['clup', 'upgrade', 'up'])
+  async def classupgrade(self, ctx):
     res = await get_class_utils(ctx.guild.id, ctx.author.id)
 
     if res['code'] == 401:
@@ -488,8 +487,8 @@ class Pokemon_user(commands.Cog):
       return await ctx.channel.send(f"{ctx.author.name}, você está no nivel máximo.")
 
     await ctx.channel.send(f"{ctx.author.name}, parabéns! agora você está na classe ``{res['class']}``.")
-  @trainerclassupgrade.error
-  async def trainerclassupgrade_error(self, ctx, error): pass
+  @classupgrade.error
+  async def classupgrade_error(self, ctx, error): pass
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
   @commands.command()
@@ -526,6 +525,113 @@ class Pokemon_user(commands.Cog):
           return await ctx.channel.send(f"{ctx.author.name}, você não tem ``{quant}x`` de ``{pokemon['name']}``.")
   @release.error
   async def release_error(self, ctx, error): pass
+
+  @commands.cooldown(1, 300, commands.BucketType.guild)
+  @commands.command()
+  async def classes(self, ctx):
+    embed = discord.Embed(title="Classes de treinador", description='''
+**
+Treinador novato:
+```
+  Preço: -
+  Cooldown no P: 30 minutos
+  Tamanho da Huntlist: 3
+```
+Treinador novato II:
+```
+  Preço: 1000 pokecoins
+  Cooldown no P: 28,5 minutos
+  Tamanho da Huntlist: 3
+  Chance de captura base + 1
+```
+Treinador novato III:
+```
+  Preço: 2000 pokecoins
+  Cooldown no P: 27 minutos
+  Tamanho da Huntlist: 3
+  Chance de captura base + 1
+```
+Treinador:
+```
+  Preço: 3000 pokecoins
+  Cooldown no P: 25,5 minutos
+  Tamanho da Huntlist: 4
+  Chance de captura base + 1
+```
+Treinador II:
+```
+  Preço: 4000 pokecoins
+  Cooldown no P: 24 minutos
+  Tamanho da Huntlist: 4
+  Chance de captura base + 1
+```
+Treinador III:
+```
+  Preço: 5000 pokecoins
+  Cooldown no P: 22,5 minutos
+  Tamanho da Huntlist: 4
+  Chance de captura base + 1
+```
+Treinador de Elite:
+```
+  Preço: 6000 pokecoins
+  Cooldown no P: 21 minutos
+  Tamanho da Huntlist: 5
+  Chance de captura base + 1
+```
+Treinador de Elite II:
+```
+  Preço: 7000 pokecoins
+  Cooldown no P: 19,5 minutos
+  Tamanho da Huntlist: 5
+  Chance de captura base + 1
+```
+Treinador de Elite III:
+```
+  Preço: 8000 pokecoins
+  Cooldown no P: 18 minutos
+  Tamanho da Huntlist: 5
+  Chance de captura base + 1
+```
+Professor Pokémon:
+```
+  Preço: 9000 pokecoins
+  Cooldown no P: 16,5 minutos
+  Tamanho da Huntlist: 6
+  Chance de captura base + 1
+```
+Professor Pokémon II:
+```
+  Preço: 10000 pokecoins
+  Cooldown no P: 15 minutos
+  Tamanho da Huntlist: 6
+  Chance de captura base + 1
+```
+Professor Pokémon III:
+```
+  Preço: 11000 pokecoins
+  Cooldown no P: 13,5 minutos
+  Tamanho da Huntlist: 6
+  Chance de captura base + 1
+```
+Mestre Pokémon:
+```
+  Preço: 12000 pokecoins
+  Cooldown no P: 10 minutos
+  Tamanho da Huntlist: 7
+  Chance de captura base + 1
+```
+**
+    ''', color=0xE56BFF)
+    embed.set_footer(text="use $classupgrade para passar de classe.")
+    embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901585840319397928/classes.png")
+    await ctx.channel.send(embed=embed)
+  @classes.error
+  async def classes_error(self, ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+      m, s = divmod(int(error.retry_after), 60)
+      h, m = divmod(m, 60)
+      await ctx.channel.send("Você só pode usar esse comando novamente em ``{:02d}:{:02d}:{:02d}``.".format(h, m, s))
 
   @commands.Cog.listener()
   async def on_reaction_add(self, reaction, user):

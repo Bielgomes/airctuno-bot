@@ -17,7 +17,7 @@ class Events(commands.Cog):
     print("@============@")
     print("| BOT ONLINE |")
     print("@============@")
-    await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(name="$help | Beta early access 1.0.5", type=3))
+    await self.bot.change_presence(status=discord.Status.online, activity=discord.Game(name="$help | Beta early access 1.1.0", type=3))
 
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
@@ -25,150 +25,232 @@ class Events(commands.Cog):
   async def help(self, ctx):
     embed = discord.Embed(description='''
     ​
-    🐱‍👤**Bem-vindo treinador, ao nosso centro de ajuda a treinadores. Nós os professores iremos listar os comandos e suas ações.**
+🐱‍👤**Bem-vindo treinador, este é o nosso centro de ajuda!**
 
+Eu, o professor Ednaldo irei te guiar nos comandos e funcionalidades do bot.
 
+antes de começar temos algumas Convenções
+**```
+<> = parâmetro opcional⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+[] = parâmetro obrigatório
+pokemon = nome ou id
+```
 
-   ** Convenções:**
-    **<>** = parâmetro opcional
-    **[]** = parâmetro obrigatório
 
 
+__🎁DAILY:__
+```
+O comando daily dá ao treinador um bônus diario.
 
-    **__🐱‍👓POKEMON:__**
-    **abreviações**: 'p', 'pm'
-    O comando pokemon spawna um pokemon aleatório que pode-ser pego por qualquer um, então seja rápido.
+Protótipo: $daily
 
-    **Protótipo**: $pokemon
+Cooldown: exatamente as 00:00 do dia seguinte.
+```
 
-    **Cooldown**: 5 minutos
 
 
+__🛒POKESHOP:__
+SINÔNIMOS: shop, loja
+```
+O comando pokeshop mostra os itens que podem ser comprados.
 
-    **__🏷WISHLIST:__**
-    O Comando wishlist mostra os pokemons na sua lista de desejos.
+Protótipo: $pokeshop
+```
 
-    **Protótipo**: $wishlist
 
 
+__💳BUY:__
+SINÔNIMOS: b, comprar
+```
+O comando buy permite ao treinador comprar itens da loja.
 
-    **__🏷WISH:__**
-    O Comando wish adiciona um pokemon a sua lista de desejos.
+Protótipo: $buy [item] <quantidade>
+```
 
-    **Protótipo**: $wish [pokemon]
 
 
+__📂BAG:__
+SINÔNIMOS: bg, mochila
+```
+O comando bag permite ao treinador ver sua mochila. Nela estão suas pokecoins e pokebolas.
 
-    **__🏷UNWISH:__**
-    O Comando unwish remove um pokemon de sua lista de desejos.
+Protótipo: $bag
+```
 
-    **Protótipo**: $unwish [pokemon]
 
 
+🐱‍👓__POKEMON:__
+SINÔNIMOS: p, pm
+```
+O comando pokemon permite ao treinador procurar um pokemon aleatório. Qualquer um pode pegar esse pokemon, então seja rápido.
 
-    **__💻PERSONALCOMPUTER:__**
-    **abreviação**: 'pc'
-    O Comando personalcomputer mostra todos os pokemons capturados pelo treinador.
+Protótipo: $pokemon
 
-    **Protótipo**: $personalcomputer <treinador>
+Cooldown Padrão: 30 minutos
+```
 
 
 
-    **__🔎POKEDEX:__**
-    **abreviação**: 'pd'
-    O comando pokedex procura o pokemon escolhido dentro da nossa API e retorna suas informações.
+__📦OPEN:__
+SINÔNIMOS: op, abrir
+```
+O comando open abre uma box.
 
-    **Protótipo**: $pokedex [nome ou id]
+Protótipo: $open [boxName] <quantidade>
+```
 
 
 
-    **__🤝TRADE:__**
-    **abreviação**: 'tr'
-    O comando trade faz uma troca de pokemons entre dois treinadores.
+__🖼PROFILE:__
+SINÔNIMOS: pfl, perfil
+```
+O comando profile mostra o seu perfil.
 
-    **Protótipo**: $trade [treinador] [pokemon a ser dado] <pokemon a ser recebido>
-    OBS: pode ser informado o nome ou id do pokemon.
+Protótipo: $profile
+```
 
 
 
-    **__🛒POKESHOP:__**
-    **abreviação**: 'shop'
-    O comando pokeshop irá mostra a loja e seus itens que podem ser comprados.
+__💻PERSONALCOMPUTER:__
+SINÔNIMOS: pc
+```
+O Comando personalcomputer mostra todos os pokemons capturados pelo treinador.
 
-    **Protótipo**: $pokeshop
+Protótipo: $personalcomputer <treinador>
+```
 
 
 
-    **__💳BUY:__**
-    **abreviação**: 'b'
-    O comando buy serve para comprar itens da loja.
+__🏆TOP__
+SINÔNIMOS: ranking
+```
+O comando top mostra os melhores treinadores da sua região.
 
-    **Protótipo**: $buy [item] <quantidade>
-    OBS: quando a quantidade não é informada o bot irá comprar uma unidade.
+Protótipo: $top
+```
 
 
 
-    **__🎁DAILY:__**
-    O comando daily da ao treinador um bônus todo dia, dentre eles, pokecoins, pokeballs e ultraballs
+__🥼EQUIP:__
+SINÔNIMOS: eq
+```
+O comando equip equipa um pokemon. Ele aparece em seu profile.
 
-    **Protótipo**: $daily
+Protótipo: $equipe [pokémon]
+```
 
-    **Cooldown**: acaba quando o dia passar
 
 
+__🥼UNEQUIP:__
+SINÔNIMOS: uq, equipar
+```
+O comando unequip irá desequipar qualquer pokemon que esteja equipado.
 
-    **__📂INVENTORY:__**
-    **abreviação**: 'inv'
-    O comando inventory permite ao treinador ver sua inventário. Estão nele informações como seus pokecoins e pokebolas.
+Protótipo: $unequip
+```
 
-    **Protótipo**: $inventory
 
 
+__🔎POKEDEX:__
+SINÔNIMOS: pd
+```
+O comando pokedex procura as informações do pokemon dentro de nosso banco de dados.
 
-    **__📦OPEN:__**
-    O comando open abre uma mistery box.
+Protótipo: $pokedex [pokémon]
+```
 
-    **Protótipo:** $open [boxName]
 
 
+__💵RELEASE:__
+SINÔNIMOS:
+```
+O comando release permite ao jogador vender pokemons.
 
-    **__📦PROFILE:__**
-    **abreviação**: 'pfl'
-    O comando profile mostra o seu perfil
+Protótipo: $release [pokémon] <quantidade>
+```
 
-    **Protótipo:** $profile
 
 
+__🎎CLASSES:__
+```
+O comando classes mostra todas as classes de treinador e seus beneficios.
 
-    **__📦EQUIP:__**
-    **abreviação**: 'eq'
-    O comando equip equipa um pokemon que irá aparecer em seu profile
+Protótipo: $classes
+```
 
-    **Protótipo:** $equipe [pokemon]
 
 
+__🔼CLASSUPGRADE:__
+SINÔNIMOS: clup, upgrade, up
+```
+O comando classupgrade permite o jogador passar de classe.
 
-    **__📦UNEQUIP:__**
-    **abreviação**: 'uq'
-    O comando unequip irá desequipar qualquer pokemon que esteja equipado.
+Protótipo: $classupgrade
+```
 
-    **Protótipo:** $unequip
 
 
+__🤝TRADE:__
+SINÔNIMOS: tr, troca
+```
+O comando trade faz uma troca de pokemons entre dois treinadores.
 
-    **__🎉PREFIX:__**
-    O comando prefix seta um novo prefixo para o bot em um servidor
+Protótipo: $trade [treinador] [pokémon a ser dado] <pokémon a ser recebido>
+```
 
-    **Protótipo:** $prefix [prefixo]
 
 
-    
-    **Após aprender os comandos você está pronto para seguir sua jornada e se tornar o melhor treinador pokemon.**
+__🏷HUNTLIST:__
+```
+O Comando huntlist mostra os pokemons na sua lista de caça.
 
+Protótipo: $huntlist
+```
+
+
+
+__🏷HUNT:__
+```
+O Comando hunt adiciona um pokemon a sua lista de caça.
+
+Protótipo: $hunt [pokémon]
+```
+
+
+
+__🏷HUNTREMOVE:__
+```
+O Comando huntremove remove um pokemon de sua lista de caça.
+
+Protótipo: $huntremove [pokémon]
+```
+
+
+
+COMANDOS DE ADMINISTRADOR
+
+
+
+__🎉PREFIX:__
+```
+O comando prefix seta prefixo novo ao bot na sua região.
+
+Protótipo: $prefix [prefixo]
+```
+
+
+
+Muito bem! agora que aprendeu tudo você está pronto para ir em sua jornada e se tornar o melhor Mestre Pokémon.**
+
+O Professor Ednaldo te deseja boa sorte!
     ''', color=0x474F70)
-    embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/891140932160880641/help.png")
+    embed.set_image(url="https://media.discordapp.net/attachments/887158781832749086/901569756308570112/Professor_Ednaldo.png")
+    embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
     embed.set_author(name=f"{self.bot.user.name}", icon_url=f"{self.bot.user.avatar_url}")
-    await ctx.author.send(embed=embed)
+    try:
+      await ctx.author.send(embed=embed)
+    except:
+      await ctx.channel.send("Ativa a DM PORRA")
   @help.error
   async def help_error(self, ctx, error): pass
 
