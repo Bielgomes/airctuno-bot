@@ -8,7 +8,7 @@ from collections import OrderedDict
 from utils.database import *
 from utils.api import *
 from utils.utils import *
-from utils.config import items_ordem, emojis_rarity, pokemon_rarity_ordem, box_images, price_itens, emojis_pokeball
+from utils.config import items_ordem, emojis_rarity, pokemon_rarity_ordem, box_images, price_itens, emojis_pokeball, all_emojis
 
 class Pokemon_user(commands.Cog):
 
@@ -233,9 +233,9 @@ class Pokemon_user(commands.Cog):
     embed = discord.Embed(title='Bem-vindo a loja', color=0xFF99CD)
     embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
     embed.set_thumbnail(url='https://media.discordapp.net/attachments/887158781832749086/889254271957221376/bolsa-de-compras.png')
-    embed.add_field(name=f"{await get_emoji('pokeball')}Pokeball", value=f"{price_itens['Pokeball']}", inline=True)
-    embed.add_field(name=f"{await get_emoji('greatball')}Greatball", value=f"{price_itens['Greatball']}", inline=True)
-    embed.add_field(name=f"{await get_emoji('ultraball')}Ultraball", value=f"{price_itens['Ultraball']}", inline=True)
+    embed.add_field(name=f"{all_emojis['pokeball']}Pokeball", value=f"{price_itens['Pokeball']}", inline=True)
+    embed.add_field(name=f"{all_emojis['greatball']}Greatball", value=f"{price_itens['Greatball']}", inline=True)
+    embed.add_field(name=f"{all_emojis['ultraball']}Ultraball", value=f"{price_itens['Ultraball']}", inline=True)
     embed.set_footer(text='Use $buy Nome Quantidade para comprar')
     await ctx.channel.send(embed=embed)
   @pokeshop.error
@@ -290,7 +290,7 @@ class Pokemon_user(commands.Cog):
     embed.add_field(name="Pokecoins", value=f"{user_pokecoins}$", inline=True)
 
     for i in user_invetory:
-      embed.add_field(name=f"{await get_emoji(i.lower())}{i}", value=f"{user_invetory[i]}x", inline=True)
+      embed.add_field(name=f"{all_emojis[i.lower()]}{i}", value=f"{user_invetory[i]}x", inline=True)
 
     await ctx.channel.send(embed=embed)
   @bag.error

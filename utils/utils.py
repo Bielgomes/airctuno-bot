@@ -1,19 +1,10 @@
 import discord
 import os
 import random
-from utils.config import all_emojis, emojis_pokeball, pokemon_rarity, pokemon_rarity_prices
+from utils.config import pokemon_rarity, pokemon_rarity_prices
 from utils.api import get_pokemon
 
 path = os.getcwd()
-
-async def get_emoji(Src = None):
-  if Src == 'pokeballs':
-    return emojis_pokeball
-
-  try:
-    return all_emojis[Src]
-  except:
-    return 404
 
 async def get_misteryBox(pokemonRarity, res = None):
   if pokemonRarity == 'common':
