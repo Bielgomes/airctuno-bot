@@ -631,7 +631,7 @@ Mestre Pokémon:
     if isinstance(error, commands.CommandOnCooldown):
       m, s = divmod(int(error.retry_after), 60)
       h, m = divmod(m, 60)
-      await ctx.channel.send("Você só pode usar esse comando novamente em ``{:02d}:{:02d}:{:02d}``.".format(h, m, s))
+      await ctx.channel.send(f"{ctx.author.name},Você só pode usar esse comando novamente em ``{:02d}:{:02d}:{:02d}``.".format(h, m, s))
 
   @commands.Cog.listener()
   async def on_reaction_add(self, reaction, user):

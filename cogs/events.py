@@ -250,7 +250,7 @@ O Professor Ednaldo te deseja boa sorte!
     try:
       await ctx.author.send(embed=embed)
     except:
-      await ctx.channel.send("Ativa a DM PORRA")
+      await ctx.channel.send(f"{ctx.author.name}, para receber essa mensagem você precisa liberar sua DM.")
   @help.error
   async def help_error(self, ctx, error): pass
 
