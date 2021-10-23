@@ -8,7 +8,7 @@ from collections import OrderedDict
 from utils.database import *
 from utils.api import *
 from utils.utils import *
-from utils.config import items_ordem, emojis_rarity, pokemon_rarity_ordem, box_images, price_itens
+from utils.config import items_ordem, emojis_rarity, pokemon_rarity_ordem, box_images, price_itens, emojis_pokeball
 
 class Pokemon_user(commands.Cog):
 
@@ -29,7 +29,7 @@ class Pokemon_user(commands.Cog):
 
     msg = await ctx.channel.send(embed=embed)
 
-    for i in await get_emoji('pokeballs'):
+    for i in emojis_pokeball:
       await msg.add_reaction(i)
 
     def check(reaction, user):
