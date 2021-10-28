@@ -11,7 +11,7 @@ class Pokemon_admin(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
 
-  # @commands.is_owner()
+  @commands.is_owner()
   @commands.command(aliases=['sp'])
   async def spawn(self, ctx, pokemonSrc = None):
     pokemon =  await pokemon_exists(pokemonSrc)
