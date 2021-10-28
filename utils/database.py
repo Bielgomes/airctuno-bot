@@ -376,24 +376,6 @@ async def user_use_box(guildId : int, id : int, mName : str, quant : int):
 
   return {'code': 200, 'content': content}
 
-async def catch_successful(guildId, id, pokeball : str, pokemonRarity : str):
-  await create_account(guildId, id)
-  collection = db[str(guildId)]
-  
-  user_class = collection.find_one({'_id': id})['class']
-
-  try:
-    pokeball = emojis_conversor[f"{pokeball}"]
-  except:
-    return 404
-
-  try:
-    chance = chances_pokeball[pokeball][pokemonRarity] + user_class
-    print(f"{pokeball} na classe {user_class} com a chance em {chance}")
-  except: pass
-
-  if pokeball == 'masterball' or random.randint(0, 100) < chance: return 200
-
 async def user_catch_pokemon(guildId : int, id : int, pokemon, box = None, quant : int = None):
   await create_account(guildId, id)
   collection = db[str(guildId)]
@@ -451,6 +433,7 @@ async def user_use_pokeball(guildId : int, id : int, pokeball, pokemonRarity : s
 
   try:
     chance = (chances_pokeball[pokeball.lower()][pokemonRarity] + user['class'])
+    print(f"{pokeball} na classe {user['class']} com a chance em {chance}")
   except: pass
 
   collection.find_one_and_update({'_id': id}, {'$set': {'bag': user['bag']}})
