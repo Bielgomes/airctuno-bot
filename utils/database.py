@@ -342,59 +342,35 @@ async def user_use_box(guildId : int, id : int, mName : str, quant : int):
     del user_bag[mName]
 
   content = ''
-  pokeballs = 0
-  greatballs = 0
-  ultraballs = 0
-  masterballs = 0
   pokecoins = 0
+  aux = {'Pokeball': 0, 'Greatball': 0, 'Ultraball': 0, 'Masterball': 0}
 
   for i in range(0, quant):
     if box == 1:
-      pokeballs += random.randint(1, 2)
+      aux['Pokeball'] += random.randint(1, 2)
       pokecoins += random.randint(25, 50)
     elif box == 2:
-      greatballs += random.randint(1, 2)
+      aux['Greatball'] += random.randint(1, 2)
       pokecoins += random.randint(50, 100)
     elif box == 3:
-      ultraballs += random.randint(1, 3)
+      aux['Ultraball'] += random.randint(1, 3)
       pokecoins += random.randint(100, 300)
     else:
       if random.randint(1,2) == 1:
-        masterballs += 1
+        aux['Masterball'] += 1
         pokecoins += random.randint(100, 300)
       else:
-        ultraballs += random.randint(5, 8)
+        aux['Ultraball'] += random.randint(5, 8)
         pokecoins += random.randint(200, 350)
-  
-  content += f"{pokecoins}x Pokecoins\n"
 
-  if pokeballs != 0:
-    try:
-      user_bag['Pokeball'] += pokeballs
-    except:
-      user_bag['Pokeball'] = pokeballs
-    content += f"{pokeballs}x Pokeballs\n"
-
-  if greatballs != 0:
-    try:
-      user_bag['Greatball'] += greatballs
-    except:
-      user_bag['Greatball'] = greatballs
-    content += f"{greatballs}x greatballs\n"
-
-  if ultraballs != 0:
-    try:
-      user_bag['Ultraball'] += ultraballs
-    except:
-      user_bag['Ultraball'] = ultraballs
-    content += f"{ultraballs}x Ultraballs\n"
-
-  if masterballs != 0:
-    try:
-      user_bag['Masterball'] += masterballs
-    except:
-      user_bag['Masterball'] = masterballs
-    content += f"{masterballs}x masterballs\n"
+  content += f"{pokecoins}$ Pokecoins\n"
+  for i in aux:
+    if aux[i] != 0:
+      try:
+        user_bag[i] += aux[i]
+      except:
+        user_bag[i] = aux[i]
+      content += f"{aux[i]}x {i.capitalize()}\n"
 
   collection.find_one_and_update({'_id': id}, {'$inc': {'pokecoins': pokecoins}, '$set': {'bag': user_bag}})
 
@@ -542,23 +518,20 @@ async def get_daily_bonus(guildId : int, id : int):
       time = user['dailyTime'] - current_time
       return {'code': 408, 'time': time}
 
-  pokeballs = random.randint(1, 5)
-  ultrabolls = random.randint(0, 3)
+  aux = {'Pokeball': 0, 'Ultraball': 0}
   pokecoins = random.randint(700, 800)
 
+  aux['Pokeball'] = random.randint(1, 5)
+  aux['Ultraball'] = random.randint(0, 3)
+
   content = f"{pokecoins}$ Pokecoins\n"
-  if pokeballs != 0:
-    try:
-      user['bag']['Pokeball'] += pokeballs
-    except:
-      user['bag']['Pokeball'] = pokeballs
-    content += f"{pokeballs}x Pokeballs\n"
-  if ultrabolls != 0:
-    content += f"{ultrabolls}x Ultraball"
-    try:
-      user['bag']['Ultraball'] += ultrabolls
-    except:
-      user['bag']['Ultraball'] = ultrabolls
+  for i in aux:
+    if aux[i] != 0:
+      try:
+        user['bag'][i] += aux[i]
+      except:
+        user['bag'][i] = aux[i]
+      content += f"{aux[i]}x {i}\n"
 
   final_time = datetime.datetime.now(pytz.timezone('America/Sao_Paulo')).replace(hour=0,minute=0,second=0,microsecond=0,tzinfo=None) + datetime.timedelta(days=1)
 

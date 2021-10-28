@@ -43,10 +43,9 @@ starter_pokemons = {
   8: {1: ['Scorbunny', 813, 'Fogo'], 2: ['Grooke', 810, 'Grama'], 3: ['Sobble', 816, 'Água']}
 }
 
-pokemon_rarity = ['exclusive', 'ultra-beast', 'legendary', 'mythical', 'rare', 'uncommon', 'common']
+pokemon_rarity = ['ultra-beast', 'legendary', 'mythical', 'rare', 'uncommon', 'common']
 
 pokemon_rarity_prices = {
-  'exclusive': 0,
   'ultra-beast': 4000,
   'legendary': 1000,
   'mythical': 450,
@@ -55,10 +54,9 @@ pokemon_rarity_prices = {
   'common': 25
 }
 
-pokemon_rarity_ordem = {k:v for v,k in enumerate(['common', 'uncommon', 'rare', 'mythical', 'legendary', 'ultra-beast', 'exclusive'])}
+pokemon_rarity_ordem = {k:v for v,k in enumerate(['common', 'uncommon', 'rare', 'mythical', 'legendary', 'ultra-beast'])}
 
 emojis_rarity = {
-  'exclusive': '🪐',
   'ultra-beast': '💫',
   'legendary': '🌟',
   'mythical': '✨',

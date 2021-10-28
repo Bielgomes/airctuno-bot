@@ -83,7 +83,7 @@ Basta reagir com eles para ver as opções de pokémon! e então é só escolher
         pages = 3
 
         embed = discord.Embed(title=f"O que você acha dele?", description=f'''
-        **```O {starter_pokemons[gen][page][0]} é um belo pokémon de tipo {starter_pokemons[gen][page][2]}! você vai querer ele?```**
+        **```O {starter_pokemons[gen][page][0]} é um belo pokémon de tipo {starter_pokemons[gen][page][2]}! você quer ele?```**
         ''', color=0x524D68)
         embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
         embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
@@ -116,7 +116,7 @@ Basta reagir com eles para ver as opções de pokémon! e então é só escolher
 Colete todos os Pokémons que puder e se torne o melhor treinador da sua Região.
 
 Te desejo boa sorte!```**
-              Caso não esteja familiarizado com os comandos eu irei te ajudar no $help
+              Caso não esteja familiarizado com os comandos eu irei te ajudar no $help.
               ''', color=0x524D68)
               embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
               embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
@@ -136,7 +136,7 @@ Te desejo boa sorte!```**
             await reaction.remove(user)
 
             embed = discord.Embed(title=f"O que você acha dele?", description=f'''
-            **```O {starter_pokemons[gen][page][0]} é um belo pokémon de tipo {starter_pokemons[gen][page][2]}! você vai querer ele?```**
+            **```O {starter_pokemons[gen][page][0]} é um belo pokémon de tipo {starter_pokemons[gen][page][2]}! você quer ele?```**
             ''', color=0x524D68)
             embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
             embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
@@ -415,7 +415,7 @@ Te desejo boa sorte!```**
     embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
     embed.set_thumbnail(url='https://media.discordapp.net/attachments/887158781832749086/901580880164831313/mochila.png')
 
-    embed.add_field(name="Pokecoins", value=f"{user_pokecoins}$", inline=True)
+    embed.add_field(name="Pokecoins", value="{:20,.0f}$".format(user_pokecoins), inline=True)
 
     for i in user_invetory:
       embed.add_field(name=f"{all_emojis[i.lower()]}{i}", value=f"{user_invetory[i]}x", inline=True)
@@ -470,7 +470,7 @@ Te desejo boa sorte!```**
       embed.set_image(url=f"{pokemon['image']}")
 
     embed.set_thumbnail(url=f"{user.avatar_url}")
-    embed.add_field(name="Pokecoins",value=f"{res['pokecoins']} $",inline=True)
+    embed.add_field(name="Pokecoins",value="{:20,.0f}$".format(res['pokecoins']),inline=True)
     embed.add_field(name="Total de Pokemons",value=f"{res['pokemons']}",inline=True)
     embed.add_field(name="Ranking",value=f"{res['ranking']}°",inline=True)
     embed.add_field(name="Classe",value=f"{res['class']}",inline=False)
