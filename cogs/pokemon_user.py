@@ -187,7 +187,7 @@ Te desejo boa sorte!```**
 
           embed = discord.Embed(title=f"{pokemon['name']} Capturado!", description="Que belo pokemon para sua coleção. Agora vá e procure outros pokemons.", color=0x00FF85)
           embed.set_author(name=f"{user.name}", icon_url=f"{user.avatar_url}")
-          embed.set_image(url=pokemon['image'])
+          embed.set_image(url=f"{pokemon['image']}")
           embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/899811541971513384/pokeball.png")
 
           if res != None:
