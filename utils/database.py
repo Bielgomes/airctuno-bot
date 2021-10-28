@@ -433,7 +433,6 @@ async def user_use_pokeball(guildId : int, id : int, pokeball, pokemonRarity : s
 
   try:
     chance = (chances_pokeball[pokeball.lower()][pokemonRarity] + user['class'])
-    print(f"{pokeball} na classe {user['class']} com a chance em {chance}")
   except: pass
 
   collection.find_one_and_update({'_id': id}, {'$set': {'bag': user['bag']}})
