@@ -46,7 +46,7 @@ async def get_pokemon_embed(pokemon, user):
 async def get_pokemon_run_embed(pokemon):
   embed = discord.Embed(title=f"{pokemon['name']} fugiu!", description="Que pena, mas agora não é hora de desanimar, vá e procure outros pokemons.", color=0xFF1331)
   embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon['id']}.png")
-  embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/897626126027989062/apper.png")
+  embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/897886024179548160/bush.png")
 
   return embed
 

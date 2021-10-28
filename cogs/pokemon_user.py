@@ -35,8 +35,8 @@ Eu sou o Professor Ednaldo, aparentemente você é novo por aqui não é mesmo?
 
 Para começar sua jornada no AirticunoBot eu irei te ajudar a escolher seu primeiro Pokémon!
 ```**
-Cada número abaixo representa os iniciais de cada geração.
-Basta reagir com eles para ver as opções de pokémon! e então é só escolher um com o ✅.
+Cada número abaixo representa os iniciais de cada geração,
+basta reagir com eles para ver as opções de pokémon! e então escolhê-lo com ✅.
           ''', color=0x524D68)
         else:
           embed = discord.Embed(title=f"{ctx.author.name}, não gostou de nenhum deles?", description=f'''
