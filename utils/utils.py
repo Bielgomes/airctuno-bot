@@ -8,13 +8,13 @@ path = os.getcwd()
 
 async def get_misteryBox(pokemonRarity, res = None):
   if pokemonRarity == 'common':
-    if random.randint(1, 100) <= 20:
+    if random.randint(1, 100) <= 40:
       res = {'quant': 1, 'mName': 'Cb', 'mNameEmbed': 'common box'}
   elif pokemonRarity == 'uncommon':
-    if random.randint(1, 100) <= 12:
+    if random.randint(1, 100) <= 40:
       res = {'quant': 1, 'mName': 'Ub', 'mNameEmbed': 'uncommon box'}
   elif pokemonRarity == 'rare':
-    if random.randint(1, 100) <= 10:
+    if random.randint(1, 100) <= 40:
       res = {'quant': 1, 'mName': 'Rb', 'mNameEmbed': 'rare box'}
   else:
     if random.randint(1, 2) == 1:
