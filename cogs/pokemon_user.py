@@ -185,7 +185,7 @@ Te desejo boa sorte!```**
           res = await get_misteryBox(pokemon['rarity'])
           await user_catch_pokemon(ctx.guild.id, user.id, pokemon, res)
   
-          embed = discord.Embed(title=f"{pokemon['name']} Capturado!", description="Que belo pokemon para sua coleção. Agora vá e procure outros pokemons.", color=0x00FF85)
+          embed = discord.Embed(title=f"{pokemon['name']} Capturado!", description="Que belo pokémon para sua coleção. Agora vá e procure outros.", color=0x00FF85)
           embed.set_author(name=f"{user.name}", icon_url=f"{user.avatar_url}")
 
           embed.set_image(url=pokemon['image'])
