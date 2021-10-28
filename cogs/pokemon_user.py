@@ -19,141 +19,141 @@ class Pokemon_user(commands.Cog):
   @commands.cooldown(1, 2, commands.BucketType.guild)
   @commands.command(aliases=['p', 'pm'])
   async def pokemon(self, ctx):
-    res = await user_can_use(ctx.guild.id, ctx.author.id)
+#     res = await user_can_use(ctx.guild.id, ctx.author.id)
 
-    if res['code'] == 401:
-      async def start(isIn = None):
-        if isIn == True:
-          if ctx.author.id in self.user_list: return
-        if ctx.author.id not in self.user_list:
-          self.user_list.append(ctx.author.id)
+#     if res['code'] == 401:
+#       async def start(isIn = None):
+#         if isIn == True:
+#           if ctx.author.id in self.user_list: return
+#         if ctx.author.id not in self.user_list:
+#           self.user_list.append(ctx.author.id)
 
-        if isIn == True:
-          embed = discord.Embed(title=f"Olá {ctx.author.name}, não vi você chegar!", description=f'''
-**```
-Eu sou o Professor Ednaldo, aparentemente você é novo por aqui não é mesmo?
+#         if isIn == True:
+#           embed = discord.Embed(title=f"Olá {ctx.author.name}, não vi você chegar!", description=f'''
+# **```
+# Eu sou o Professor Ednaldo, aparentemente você é novo por aqui não é mesmo?
 
-Para começar sua jornada no AirticunoBot eu irei te ajudar a escolher seu primeiro Pokémon!
-```**
-Cada número abaixo representa os iniciais de cada geração,
-basta reagir com eles para ver as opções de pokémon! e então escolhê-lo com ✅.
-          ''', color=0x524D68)
-        else:
-          embed = discord.Embed(title=f"{ctx.author.name}, não gostou de nenhum deles?", description=f'''
-          ```Você pode escolher pokémons de outras gerações.```
-          ''', color=0x524D68)
-        embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
-        embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
+# Para começar sua jornada no AirticunoBot eu irei te ajudar a escolher seu primeiro Pokémon!
+# ```**
+# Cada número abaixo representa os iniciais de cada geração,
+# basta reagir com eles para ver as opções de pokémon! e então escolhê-lo com ✅.
+#           ''', color=0x524D68)
+#         else:
+#           embed = discord.Embed(title=f"{ctx.author.name}, não gostou de nenhum deles?", description=f'''
+#           ```Você pode escolher pokémons de outras gerações.```
+#           ''', color=0x524D68)
+#         embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
+#         embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
 
-        msg = await ctx.channel.send(embed=embed)
+#         msg = await ctx.channel.send(embed=embed)
         
-        await msg.add_reaction("1️⃣")
-        await msg.add_reaction("2️⃣")
-        await msg.add_reaction("3️⃣")
-        await msg.add_reaction("4️⃣")
-        await msg.add_reaction("5️⃣")
-        await msg.add_reaction("6️⃣")
-        await msg.add_reaction("7️⃣")
-        await msg.add_reaction("8️⃣")
+#         await msg.add_reaction("1️⃣")
+#         await msg.add_reaction("2️⃣")
+#         await msg.add_reaction("3️⃣")
+#         await msg.add_reaction("4️⃣")
+#         await msg.add_reaction("5️⃣")
+#         await msg.add_reaction("6️⃣")
+#         await msg.add_reaction("7️⃣")
+#         await msg.add_reaction("8️⃣")
 
-        def check(reaction, user):
-          return user != self.bot.user and user == ctx.author and reaction.message.id == msg.id and str(reaction.emoji) in ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣']
+#         def check(reaction, user):
+#           return user != self.bot.user and user == ctx.author and reaction.message.id == msg.id and str(reaction.emoji) in ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣']
         
-        while True:
-          try:
-            reaction, user = await self.bot.wait_for('reaction_add', timeout=60.0, check=check)
-          except asyncio.TimeoutError:
-            return self.user_list.remove(ctx.author.id)
-          else:
-            if str(reaction.emoji) == '1️⃣': gen = 1
-            elif str(reaction.emoji) == '2️⃣': gen = 2
-            elif str(reaction.emoji) == '3️⃣': gen = 3
-            elif str(reaction.emoji) == '4️⃣': gen = 4
-            elif str(reaction.emoji) == '5️⃣': gen = 5
-            elif str(reaction.emoji) == '6️⃣': gen = 6
-            elif str(reaction.emoji) == '7️⃣': gen = 7
-            elif str(reaction.emoji) == '8️⃣': gen = 8
-            else: continue
+#         while True:
+#           try:
+#             reaction, user = await self.bot.wait_for('reaction_add', timeout=60.0, check=check)
+#           except asyncio.TimeoutError:
+#             return self.user_list.remove(ctx.author.id)
+#           else:
+#             if str(reaction.emoji) == '1️⃣': gen = 1
+#             elif str(reaction.emoji) == '2️⃣': gen = 2
+#             elif str(reaction.emoji) == '3️⃣': gen = 3
+#             elif str(reaction.emoji) == '4️⃣': gen = 4
+#             elif str(reaction.emoji) == '5️⃣': gen = 5
+#             elif str(reaction.emoji) == '6️⃣': gen = 6
+#             elif str(reaction.emoji) == '7️⃣': gen = 7
+#             elif str(reaction.emoji) == '8️⃣': gen = 8
+#             else: continue
 
-            await msg.delete()
-            return gen
+#             await msg.delete()
+#             return gen
 
-      async def final(gen):
-        page = 1
-        pages = 3
+#       async def final(gen):
+#         page = 1
+#         pages = 3
 
-        embed = discord.Embed(title=f"O que você acha dele?", description=f'''
-        **```O {starter_pokemons[gen][page][0]} é um belo pokémon de tipo {starter_pokemons[gen][page][2]}! você quer ele?```**
-        ''', color=0x524D68)
-        embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
-        embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
-        embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{starter_pokemons[gen][1][1]}.png")
-        embed.set_footer(text=f"Page {page} / 3")
+#         embed = discord.Embed(title=f"O que você acha dele?", description=f'''
+#         **```O {starter_pokemons[gen][page][0]} é um belo pokémon de tipo {starter_pokemons[gen][page][2]}! você quer ele?```**
+#         ''', color=0x524D68)
+#         embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
+#         embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
+#         embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{starter_pokemons[gen][1][1]}.png")
+#         embed.set_footer(text=f"Page {page} / 3")
 
-        msg = await ctx.channel.send(embed=embed)
+#         msg = await ctx.channel.send(embed=embed)
         
-        await msg.add_reaction("⬅")
-        await msg.add_reaction("➡")
-        await msg.add_reaction("✅")
-        await msg.add_reaction("🔄")
+#         await msg.add_reaction("⬅")
+#         await msg.add_reaction("➡")
+#         await msg.add_reaction("✅")
+#         await msg.add_reaction("🔄")
 
-        def check(reaction, user):
-          return user != self.bot.user and user == ctx.author and reaction.message.id == msg.id and str(reaction.emoji) in ['⬅', '➡', '✅', '🔄']
+#         def check(reaction, user):
+#           return user != self.bot.user and user == ctx.author and reaction.message.id == msg.id and str(reaction.emoji) in ['⬅', '➡', '✅', '🔄']
 
-        while True:
-          try:
-            reaction, user = await self.bot.wait_for("reaction_add", timeout=60.0, check=check)
-          except asyncio.TimeoutError:
-            return self.user_list.remove(ctx.author.id)
-          else:
-            if str(reaction.emoji) == '✅':
-              await user_starter_pokemon(ctx.guild.id, ctx.author.id, starter_pokemons[gen][page][0])
-              self.user_list.remove(ctx.author.id)
+#         while True:
+#           try:
+#             reaction, user = await self.bot.wait_for("reaction_add", timeout=60.0, check=check)
+#           except asyncio.TimeoutError:
+#             return self.user_list.remove(ctx.author.id)
+#           else:
+#             if str(reaction.emoji) == '✅':
+#               await user_starter_pokemon(ctx.guild.id, ctx.author.id, starter_pokemons[gen][page][0])
+#               self.user_list.remove(ctx.author.id)
  
-              embed = discord.Embed(title=f"Essa foi uma ótima escolha!", description=f'''
-**```Agora treinador, você está pronto para iniciar sua jornada junto de seu {starter_pokemons[gen][page][0]}!
+#               embed = discord.Embed(title=f"Essa foi uma ótima escolha!", description=f'''
+# **```Agora treinador, você está pronto para iniciar sua jornada junto de seu {starter_pokemons[gen][page][0]}!
 
-Colete todos os Pokémons que puder e se torne o melhor treinador da sua Região.
+# Colete todos os Pokémons que puder e se torne o melhor treinador da sua Região.
 
-Te desejo boa sorte!```**
-              Caso não esteja familiarizado com os comandos eu irei te ajudar no $help.
-              ''', color=0x524D68)
-              embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
-              embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
-              embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{starter_pokemons[gen][page][1]}.png")
-              return await msg.edit(embed=embed)
-            elif str(reaction.emoji) == '🔄':
-              await msg.delete()
-              return True
-            elif str(reaction.emoji) == '⬅':
-              page -= 1
-              if page < 1: page = pages
-            elif str(reaction.emoji) == '➡':
-              page += 1
-              if page > pages: page = 1
-            else: continue
+# Te desejo boa sorte!```**
+#               Caso não esteja familiarizado com os comandos eu irei te ajudar no $help.
+#               ''', color=0x524D68)
+#               embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
+#               embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
+#               embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{starter_pokemons[gen][page][1]}.png")
+#               return await msg.edit(embed=embed)
+#             elif str(reaction.emoji) == '🔄':
+#               await msg.delete()
+#               return True
+#             elif str(reaction.emoji) == '⬅':
+#               page -= 1
+#               if page < 1: page = pages
+#             elif str(reaction.emoji) == '➡':
+#               page += 1
+#               if page > pages: page = 1
+#             else: continue
 
-            await reaction.remove(user)
+#             await reaction.remove(user)
 
-            embed = discord.Embed(title=f"O que você acha dele?", description=f'''
-            **```O {starter_pokemons[gen][page][0]} é um belo pokémon de tipo {starter_pokemons[gen][page][2]}! você quer ele?```**
-            ''', color=0x524D68)
-            embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
-            embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
-            embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{starter_pokemons[gen][page][1]}.png")
-            embed.set_footer(text=f"Page {page} / 3")
+#             embed = discord.Embed(title=f"O que você acha dele?", description=f'''
+#             **```O {starter_pokemons[gen][page][0]} é um belo pokémon de tipo {starter_pokemons[gen][page][2]}! você quer ele?```**
+#             ''', color=0x524D68)
+#             embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
+#             embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
+#             embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{starter_pokemons[gen][page][1]}.png")
+#             embed.set_footer(text=f"Page {page} / 3")
 
-            await msg.edit(embed=embed)
+#             await msg.edit(embed=embed)
       
-      i = 0
-      while True:
-        if i == 0: gen = await start(True)
-        else: gen = await start()
-        i = await final(gen)
-        if i != True:return
+#       i = 0
+#       while True:
+#         if i == 0: gen = await start(True)
+#         else: gen = await start()
+#         i = await final(gen)
+#         if i != True:return
 
-    if res['code'] == 402:
-      return await ctx.channel.send(f"{ctx.author.name}, aguarde `{res['time']}` para buscar pokemons novamente.")
+#     if res['code'] == 402:
+#       return await ctx.channel.send(f"{ctx.author.name}, aguarde `{res['time']}` para buscar pokemons novamente.")
 
     pokemon = await get_random_pokemon(ctx.guild.id, ctx.author.id)
 
@@ -184,15 +184,16 @@ Te desejo boa sorte!```**
         if use_pokeball['code'] == 200:
           res = await get_misteryBox(pokemon['rarity'])
           await user_catch_pokemon(ctx.guild.id, user.id, pokemon, res)
-
+  
           embed = discord.Embed(title=f"{pokemon['name']} Capturado!", description="Que belo pokemon para sua coleção. Agora vá e procure outros pokemons.", color=0x00FF85)
           embed.set_author(name=f"{user.name}", icon_url=f"{user.avatar_url}")
-          embed.set_image(url=f"{pokemon['image']}")
+
+          embed.set_image(url=pokemon['image'])
           embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/899811541971513384/pokeball.png")
 
           if res != None:
             embed.set_footer(text=f"Você ganhou {res['quant']}x de {res['mNameEmbed']}")
-          
+
           await msg.edit(embed=embed)
           return await msg.clear_reactions()
         else:
@@ -260,7 +261,7 @@ Te desejo boa sorte!```**
   async def pokedex(self, ctx, pokemonSrc = None):
     if pokemonSrc == None:
       return await ctx.channel.send(f"{ctx.author.name}, especifique um pokemon para procurar.")
-
+  
     pokemon =  await pokemon_exists(pokemonSrc)
  
     if pokemon == 404: 
@@ -272,7 +273,7 @@ Te desejo boa sorte!```**
 
     embed = discord.Embed(color=0xDC0A2D)
 
-    embed.set_image(url=f"{pokemon['image']}")
+    embed.set_image(url=pokemon['image'])
 
     embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
     embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/890060279692550164/pokedex.png")
@@ -467,7 +468,7 @@ Te desejo boa sorte!```**
       res['pokemonEquip'] = "Nenhum"
     else:
       pokemon = await get_pokemon(res['pokemonEquip'])
-      embed.set_image(url=f"{pokemon['image']}")
+      embed.set_image(url=pokemon['image'])
 
     embed.set_thumbnail(url=f"{user.avatar_url}")
     embed.add_field(name="Pokecoins",value="{:20,.0f}$".format(res['pokecoins']),inline=True)

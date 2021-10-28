@@ -43,20 +43,19 @@ class Pokemon_admin(commands.Cog):
           await ctx.channel.send(f"{user.name} não tem {use_pokeball['pokeball']}s")
           continue
 
-        if use_pokeball['code'] == 403: continue
-
         if use_pokeball['code'] == 200:
           res = await get_misteryBox(pokemon['rarity'])
           await user_catch_pokemon(ctx.guild.id, user.id, pokemon, res)
-
+  
           embed = discord.Embed(title=f"{pokemon['name']} Capturado!", description="Que belo pokemon para sua coleção. Agora vá e procure outros pokemons.", color=0x00FF85)
           embed.set_author(name=f"{user.name}", icon_url=f"{user.avatar_url}")
+
           embed.set_image(url=pokemon['image'])
           embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/899811541971513384/pokeball.png")
 
           if res != None:
             embed.set_footer(text=f"Você ganhou {res['quant']}x de {res['mNameEmbed']}")
-          
+
           await msg.edit(embed=embed)
           return await msg.clear_reactions()
         else:

@@ -84,4 +84,4 @@ async def get_user_pokemons_rarity(pokemons):
     res /= 2
     quants.append(round(res))
 
-  return {'ultra-beast': f"{quants[1]}/11", 'legendary': f"{quants[2]}/57", 'mythical': f"{quants[3]}/22", 'rare': f"{quants[4]}/332", 'uncommon': f"{quants[5]}/126", 'common': f"{quants[6]}/350"}
+  return {'ultra-beast': f"{quants[0]}/11", 'legendary': f"{quants[1]}/57", 'mythical': f"{quants[2]}/22", 'rare': f"{quants[3]}/332", 'uncommon': f"{quants[4]}/126", 'common': f"{quants[5]}/350"}

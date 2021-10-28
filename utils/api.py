@@ -15,7 +15,7 @@ async def get_random_pokemon(guildId, id : int):
   
   data = json.loads(request.content)
  
-  return {'id': data['id'], 'name': data['name'].replace('-',' ').capitalize(), 'rarity': data['rarity']}
+  return {'id': data['id'], 'name': data['name'].replace('-',' ').capitalize(), 'rarity': data['rarity'], 'image': data['image']}
 
 async def get_pokemon(pokemon):
   pokemon = pokemon.replace(' ', '-').lower()
