@@ -23,12 +23,24 @@ emojis_pokeball = {
   'masterball': '<:masterball:887870688139018290>',
 }
 
-badges_order = ['Developer', 'Collaborator', 'Betatester']
+badges_order = ['Owner', 'Developer', 'Collaborator', 'Betatester']
 
 badges = {
+  'owner': '<:owner:903033809312833596>',
   'developer': '<:developer:894069601078493255>',
   'collaborator': '<:collaborator:894069601183346708>',
   'betatester': '<:betatester:894069600763916339>'
+}
+
+starter_pokemons = {
+  1: {1: ['Charmander', 4, 'Fogo'], 2: ['Bulbasaur', 1, 'Grama e veneno'], 3: ['Squirtle', 7, 'Água']},
+  2: {1: ['Cyndaquil', 155, 'Fogo'], 2: ['Chikorita', 152, 'Grama'], 3: ['Totodile', 158, 'Água']},
+  3: {1: ['Torchic', 255, 'Fogo'],  2: ['Treecko', 252, 'Grama'], 3: ['Mudkip', 258, 'Água']},
+  4: {1: ['Chimchar', 390, 'Fogo'], 2: ['Turtwig', 387, 'Grama'], 3: ['Piplup', 393, 'Água']},
+  5: {1: ['Tepig', 498, 'Fogo'], 2: ['Snivy', 495, 'Grama'], 3: ['Oshawot', 501, 'Água']},
+  6: {1: ['Fennekin', 653, 'Fogo'], 2: ['Chespin', 650, 'Grama'], 3: ['Froakie', 656, 'Água']},
+  7: {1: ['Litten', 725, 'Fogo'], 2: ['Rowlet', 722, 'Grama e Voador'], 3: ['Popplio', 728, 'Água']},
+  8: {1: ['Scorbunny', 813, 'Fogo'], 2: ['Grooke', 810, 'Grama'], 3: ['Sobble', 816, 'Água']}
 }
 
 pokemon_rarity = ['exclusive', 'ultra-beast', 'legendary', 'mythical', 'rare', 'uncommon', 'common']

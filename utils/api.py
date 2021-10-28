@@ -25,11 +25,6 @@ async def get_pokemon(pokemon):
     return 404
 
   data = json.loads(request.content)
-
-  try: 
-    data['image']
-  except: 
-    data['image'] = ''
   
   return {"id": data["id"], "name": data["name"].replace('-',' ').title(), 'rarity': data['rarity'], 'type': data['types'], 'image': data['image']}
 

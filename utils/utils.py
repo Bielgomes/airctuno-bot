@@ -1,7 +1,7 @@
 import discord
 import os
 import random
-from utils.config import pokemon_rarity, pokemon_rarity_prices
+from utils.config import pokemon_rarity
 from utils.api import get_pokemon
 
 path = os.getcwd()
@@ -64,10 +64,6 @@ async def pokemon_exists(pokemonSrc):
     pokemon = await get_pokemon(pokemonSrc.lower())
 
   return pokemon
-
-async def get_pokemon_price(pokemonRarity, quant):
-  price = pokemon_rarity_prices[pokemonRarity] * quant
-  return price
 
 async def get_trade_embed(user, member, tradeItem1, tradeItem2):
   embed = discord.Embed(title=f"{member.name}​, o treinador {user.name} quer trocar com você!", color=0xFF003F)

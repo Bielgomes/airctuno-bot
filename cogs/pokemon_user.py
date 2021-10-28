@@ -1,5 +1,4 @@
 import asyncio
-from datetime import time
 import discord
 from discord.ext import *
 from discord.ext import commands
@@ -8,19 +7,152 @@ from collections import OrderedDict
 from utils.database import *
 from utils.api import *
 from utils.utils import *
-from utils.config import items_ordem, emojis_rarity, pokemon_rarity_ordem, box_images, price_itens, emojis_pokeball, all_emojis
+from utils.config import *
 
 class Pokemon_user(commands.Cog):
 
   def __init__(self, bot):
       self.bot = bot
+      self.user_list = []
+      self.release_list = []
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
   @commands.command(aliases=['p', 'pm'])
   async def pokemon(self, ctx):
-    res = await user_in_cooldown(ctx.guild.id, ctx.author.id)
+    res = await user_can_use(ctx.guild.id, ctx.author.id)
 
-    if res['code'] == 408:
+    if res['code'] == 401:
+      async def start(isIn = None):
+        if isIn == True:
+          if ctx.author.id in self.user_list: return
+        if ctx.author.id not in self.user_list:
+          self.user_list.append(ctx.author.id)
+
+        if isIn == True:
+          embed = discord.Embed(title=f"Olá {ctx.author.name}, não vi você chegar!", description=f'''
+**```
+Eu sou o Professor Ednaldo, aparentemente você é novo por aqui não é mesmo?
+
+Para começar sua jornada no AirticunoBot eu irei te ajudar a escolher seu primeiro Pokémon!
+```**
+Cada número abaixo representa os iniciais de cada geração.
+Basta reagir com eles para ver as opções de pokémon! e então é só escolher um com o ✅.
+          ''', color=0x524D68)
+        else:
+          embed = discord.Embed(title=f"{ctx.author.name}, não gostou de nenhum deles?", description=f'''
+          ```Você pode escolher pokémons de outras gerações.```
+          ''', color=0x524D68)
+        embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
+        embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
+
+        msg = await ctx.channel.send(embed=embed)
+        
+        await msg.add_reaction("1️⃣")
+        await msg.add_reaction("2️⃣")
+        await msg.add_reaction("3️⃣")
+        await msg.add_reaction("4️⃣")
+        await msg.add_reaction("5️⃣")
+        await msg.add_reaction("6️⃣")
+        await msg.add_reaction("7️⃣")
+        await msg.add_reaction("8️⃣")
+
+        def check(reaction, user):
+          return user != self.bot.user and user == ctx.author and reaction.message.id == msg.id and str(reaction.emoji) in ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣']
+        
+        while True:
+          try:
+            reaction, user = await self.bot.wait_for('reaction_add', timeout=60.0, check=check)
+          except asyncio.TimeoutError:
+            return self.user_list.remove(ctx.author.id)
+          else:
+            if str(reaction.emoji) == '1️⃣': gen = 1
+            elif str(reaction.emoji) == '2️⃣': gen = 2
+            elif str(reaction.emoji) == '3️⃣': gen = 3
+            elif str(reaction.emoji) == '4️⃣': gen = 4
+            elif str(reaction.emoji) == '5️⃣': gen = 5
+            elif str(reaction.emoji) == '6️⃣': gen = 6
+            elif str(reaction.emoji) == '7️⃣': gen = 7
+            elif str(reaction.emoji) == '8️⃣': gen = 8
+            else: continue
+
+            await msg.delete()
+            return gen
+
+      async def final(gen):
+        page = 1
+        pages = 3
+
+        embed = discord.Embed(title=f"O que você acha dele?", description=f'''
+        **```O {starter_pokemons[gen][page][0]} é um belo pokémon de tipo {starter_pokemons[gen][page][2]}! você vai querer ele?```**
+        ''', color=0x524D68)
+        embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
+        embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
+        embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{starter_pokemons[gen][1][1]}.png")
+        embed.set_footer(text=f"Page {page} / 3")
+
+        msg = await ctx.channel.send(embed=embed)
+        
+        await msg.add_reaction("⬅")
+        await msg.add_reaction("➡")
+        await msg.add_reaction("✅")
+        await msg.add_reaction("🔄")
+
+        def check(reaction, user):
+          return user != self.bot.user and user == ctx.author and reaction.message.id == msg.id and str(reaction.emoji) in ['⬅', '➡', '✅', '🔄']
+
+        while True:
+          try:
+            reaction, user = await self.bot.wait_for("reaction_add", timeout=60.0, check=check)
+          except asyncio.TimeoutError:
+            return self.user_list.remove(ctx.author.id)
+          else:
+            if str(reaction.emoji) == '✅':
+              await user_starter_pokemon(ctx.guild.id, ctx.author.id, starter_pokemons[gen][page][0])
+              self.user_list.remove(ctx.author.id)
+ 
+              embed = discord.Embed(title=f"Essa foi uma ótima escolha!", description=f'''
+**```Agora treinador, você está pronto para iniciar sua jornada junto de seu {starter_pokemons[gen][page][0]}!
+
+Colete todos os Pokémons que puder e se torne o melhor treinador da sua Região.
+
+Te desejo boa sorte!```**
+              Caso não esteja familiarizado com os comandos eu irei te ajudar no $help
+              ''', color=0x524D68)
+              embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
+              embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
+              embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{starter_pokemons[gen][page][1]}.png")
+              return await msg.edit(embed=embed)
+            elif str(reaction.emoji) == '🔄':
+              await msg.delete()
+              return True
+            elif str(reaction.emoji) == '⬅':
+              page -= 1
+              if page < 1: page = pages
+            elif str(reaction.emoji) == '➡':
+              page += 1
+              if page > pages: page = 1
+            else: continue
+
+            await reaction.remove(user)
+
+            embed = discord.Embed(title=f"O que você acha dele?", description=f'''
+            **```O {starter_pokemons[gen][page][0]} é um belo pokémon de tipo {starter_pokemons[gen][page][2]}! você vai querer ele?```**
+            ''', color=0x524D68)
+            embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
+            embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
+            embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{starter_pokemons[gen][page][1]}.png")
+            embed.set_footer(text=f"Page {page} / 3")
+
+            await msg.edit(embed=embed)
+      
+      i = 0
+      while True:
+        if i == 0: gen = await start(True)
+        else: gen = await start()
+        i = await final(gen)
+        if i != True:return
+
+    if res['code'] == 402:
       return await ctx.channel.send(f"{ctx.author.name}, aguarde `{res['time']}` para buscar pokemons novamente.")
 
     pokemon = await get_random_pokemon(ctx.guild.id, ctx.author.id)
@@ -33,7 +165,7 @@ class Pokemon_user(commands.Cog):
       await msg.add_reaction(emojis_pokeball[i])
 
     def check(reaction, user):
-        return user != self.bot.user and reaction.message.id == msg.id
+      return user != self.bot.user and reaction.message.id == msg.id and str(reaction.emoji) in emojis_pokeball.values()
 
     while True:
       try:
@@ -49,15 +181,13 @@ class Pokemon_user(commands.Cog):
           await ctx.channel.send(f"{user.name} não tem {use_pokeball['pokeball']}s")
           continue
 
-        if use_pokeball['code'] == 403: continue
-
         if use_pokeball['code'] == 200:
           res = await get_misteryBox(pokemon['rarity'])
           await user_catch_pokemon(ctx.guild.id, user.id, pokemon, res)
 
           embed = discord.Embed(title=f"{pokemon['name']} Capturado!", description="Que belo pokemon para sua coleção. Agora vá e procure outros pokemons.", color=0x00FF85)
           embed.set_author(name=f"{user.name}", icon_url=f"{user.avatar_url}")
-          embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon['id']}.png")
+          embed.set_image(url=pokemon['image'])
           embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/899811541971513384/pokeball.png")
 
           if res != None:
@@ -89,7 +219,7 @@ class Pokemon_user(commands.Cog):
       embed_color = 0xfc0367
 
     if len(user_pokemons) == 0:
-      return await ctx.channel.send(f"{ctx.author.name}, você não tem pokemons.")
+      return await ctx.channel.send(f"{ctx.author.name}, você não tem pokémons.")
 
     pages = math.ceil(len(user_pokemons) / 10)
 
@@ -142,10 +272,7 @@ class Pokemon_user(commands.Cog):
 
     embed = discord.Embed(color=0xDC0A2D)
 
-    if pokemon['rarity'] == 'exclusive':
-       embed.set_image(url=f"{pokemon['image']}")
-    else:
-      embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon['id']}.png")
+    embed.set_image(url=f"{pokemon['image']}")
 
     embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
     embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/890060279692550164/pokedex.png")
@@ -160,24 +287,24 @@ class Pokemon_user(commands.Cog):
   @commands.cooldown(1, 2, commands.BucketType.guild)
   @commands.command(aliases=['tr', 'troca'])
   async def trade(self, ctx, member : discord.Member = None, tradeItem1 = None, tradeItem2 = None):
+    res = await users_can_trade(ctx.guild.id, ctx.author.id, member.id)
+    if res == 1:
+      return await ctx.channel.send(f"{ctx.author.name}, você não pode trocar antes de pegar seu pokémon inicial.")
+    elif res == 2:
+      return await ctx.channel.send(f"{member.name} não pode trocar, pois ainda não escolheu seu pokémon inicial.")
+
     if member == None:
       return await ctx.channel.send(f"{ctx.author.name}, especifique um treinador com quem você quer trocar.") 
-
-    if ctx.author == member:
+    elif ctx.author == member:
       return await ctx.channel.send(f"{ctx.author.name}, você não pode fazer uma troca com si mesmo.")
-
-    if tradeItem1 == None:
+    elif tradeItem1 == None:
       return await ctx.channel.send(f"{ctx.author.name}, especifique o pokemon a ser trocado.")
 
     pokemon =  await pokemon_exists(tradeItem1)
- 
+
     if pokemon == 404: 
       return await ctx.channel.send(f"{ctx.author.name}, pokemon não encontrado.")
-
-    if pokemon['rarity'] == 'exclusive':
-      return await ctx.channel.send(f"{ctx.author.name}, pokemons exclusivos não podem ser trocados.")
-
-    if await user_has_pokemon(ctx.guild.id, ctx.author.id, pokemon['name']) == 404:
+    elif await user_has_pokemon(ctx.guild.id, ctx.author.id, pokemon['name']) == 404:
       return await ctx.channel.send(f"{ctx.author.name}, você não tem esse pokemon.")
 
     if tradeItem2 != None:
@@ -185,12 +312,8 @@ class Pokemon_user(commands.Cog):
 
       if pokemon2 == 404: 
         return await ctx.channel.send(f"{ctx.author.name}, pokemon não encontrado.")
-
-      if pokemon2['rarity'] == 'exclusive':
-        return await ctx.channel.send(f"{ctx.author.name}, pokemons exclusivos não podem ser trocados.")
-
-      if await user_has_pokemon(ctx.guild.id, member.id, pokemon2['name']) == 404:
-        return await ctx.channel.send(f"{member.name} não tem esse pokemon.")
+      elif await user_has_pokemon(ctx.guild.id, member.id, pokemon2['name']) == 404:
+        return await ctx.channel.send(f"{member.name}, não tem esse pokemon.")
 
     if tradeItem2 == None:
       res = await get_trade_embed(ctx.author, member, pokemon, {'name': 'Nada'})
@@ -215,9 +338,14 @@ class Pokemon_user(commands.Cog):
       await msg.clear_reactions() 
     else:
       if tradeItem2 == None:
-        await user_trade_with_one_pokemon(ctx.guild.id, ctx.author.id, member.id, pokemon)
+        res = await user_trade_with_one_pokemon(ctx.guild.id, ctx.author.id, member.id, pokemon)
       else:
-        await user_trade_with_two_pokemon(ctx.guild.id, ctx.author.id, member.id, pokemon, pokemon2)
+        res = await user_trade_with_two_pokemon(ctx.guild.id, ctx.author.id, member.id, pokemon, pokemon2)
+
+      if res == 404:
+        return await ctx.channel.send(f"{ctx.author.name}, você não tem esse pokemon.")
+      elif res == 403:
+        return await ctx.channel.send(f"{member.name} não tem esse pokemon.")
 
       embed = discord.Embed()
       embed.set_image(url='https://media.discordapp.net/attachments/887158781832749086/888159086942765076/sucessfull_trade.png?width=720&height=240')
@@ -335,22 +463,19 @@ class Pokemon_user(commands.Cog):
  
     embed = discord.Embed(title=f"{user.name}", color=0x28AE64)
 
-    if res['pokemon_equip'] == '':
-      res['pokemon_equip'] = "Nenhum"
+    if res['pokemonEquip'] == '':
+      res['pokemonEquip'] = "Nenhum"
     else:
-      pokemon = await get_pokemon(res['pokemon_equip'])
-      if pokemon['rarity'] == 'exclusive':
-        embed.set_image(url=f"{pokemon['image']}")
-      else:
-        embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon['id']}.png")
+      pokemon = await get_pokemon(res['pokemonEquip'])
+      embed.set_image(url=f"{pokemon['image']}")
 
     embed.set_thumbnail(url=f"{user.avatar_url}")
     embed.add_field(name="Pokecoins",value=f"{res['pokecoins']} $",inline=True)
-    embed.add_field(name="Pokemons",value=f"{res['pokemons']}",inline=True)
-    embed.add_field(name="Ranking<:resource_in_beta:896230169054965760>",value=f"{res['ranking']}°",inline=True)
-    embed.add_field(name="Classe<:resource_in_beta:896230169054965760>",value=f"{res['class']}",inline=False)
-    embed.add_field(name="Emblemas<:resource_in_beta:896230169054965760>",value=f"{res['badges']}",inline=False)
-    embed.add_field(name="Pokemon equipado",value=f"{res['pokemon_equip']}",inline=False)
+    embed.add_field(name="Total de Pokemons",value=f"{res['pokemons']}",inline=True)
+    embed.add_field(name="Ranking",value=f"{res['ranking']}°",inline=True)
+    embed.add_field(name="Classe",value=f"{res['class']}",inline=False)
+    embed.add_field(name="Emblemas",value=f"{res['badges']}",inline=False)
+    embed.add_field(name="Pokemon equipado",value=f"{res['pokemonEquip']}",inline=False)
     await ctx.channel.send(embed=embed)
   @profile.error
   async def profile_error(self, ctx, error): pass
@@ -366,12 +491,12 @@ class Pokemon_user(commands.Cog):
     if pokemon == 404: 
       return await ctx.channel.send(f"{ctx.author.name}, pokemon não encontrado.")
 
-    res = await user_has_pokemon(ctx.guild.id, ctx.author.id, pokemon['name'])
+    res = await user_has_pokemon(ctx.guild.id, ctx.author.id, pokemonSrc.lower().capitalize())
 
     if res == 404:
       return await ctx.channel.send(f"{ctx.author.name}, você não tem esse pokemon.")
 
-    equip = await user_equip_pokemon(ctx.guild.id, ctx.author.id, pokemon['name'])
+    equip = await user_equip_pokemon(ctx.guild.id, ctx.author.id, pokemonSrc.lower().capitalize())
 
     if equip == 400:
       return await ctx.channel.send(f"{ctx.author.name}, esse pokemon já está equipado.")
@@ -493,36 +618,55 @@ class Pokemon_user(commands.Cog):
   @commands.cooldown(1, 2, commands.BucketType.guild)
   @commands.command()
   async def release(self, ctx, pokemonSrc = None, quant : int = None):
+    if ctx.author.id in self.release_list:
+      return
     if pokemonSrc == None:
       return await ctx.channel.send(f"{ctx.author.name}, especifique um pokemon.")
 
-    pokemon =  await pokemon_exists(pokemonSrc)
+    pokemon = await pokemon_exists(pokemonSrc)
 
     if pokemon == 404:
       return await ctx.channel.send(f"{ctx.author.name}, pokemon não encontrado.")
 
-    if quant == None or quant <= 0:
-      quant = 1
+    if quant == None or quant <= 0: quant = 1
 
-    price = await get_pokemon_price(pokemon['rarity'], quant)
-    msg = await ctx.channel.send(f"{ctx.author.name}, você quer vender ``{quant}x`` de ``{pokemon['name']}`` por ``{price}`` pokecoins?")
-    await msg.add_reaction('✅')
+    price = await get_pokemon_price(ctx.guild.id, ctx.author.id, pokemon, quant)
 
-    def check(reaction, user):
-      return user != self.bot.user and user == ctx.author and str(reaction) == '✅' and msg.id == reaction.message.id
+    if price == 404:
+      return await ctx.channel.send(f"{ctx.author.name}, você não tem esse pokemon.")
+    elif price == 401:
+      return await ctx.channel.send(f"{ctx.author.name}, você não tem **{quant}x de {pokemon['name']}**.")
+
+    self.release_list.append(ctx.author.id)
+
+    await ctx.channel.send(f"{ctx.author.name}, ao vender **{quant}x de {pokemon['name']}** você ganha **{price} pokecoins**, digite(y/n) para aceitar ou cancelar.")
+
+    def check(message):
+      return message.author == ctx.author
 
     while True:
       try:
-        await self.bot.wait_for("reaction_add", timeout=19.0, check=check)
+        message = await self.bot.wait_for("message", timeout=30.0, check=check)
       except:
-        return
+        return self.release_list.remove(ctx.author.id)
       else:
-        res = await release_pokemon(ctx.guild.id, ctx.author.id, pokemon, quant, price)
+        if message.author == self.bot.user:
+          print("Bot message")
+          continue
+        if message.content.lower() == 'n':
+          self.release_list.remove(ctx.author.id)
+          return await ctx.channel.send(f"{ctx.author.name}, release cancelado.")
+        elif message.content.lower() == 'y':
+          res = await release_pokemon(ctx.guild.id, ctx.author.id, pokemon, quant, price)
 
-        if res == 404:
-          return await ctx.channel.send(f"{ctx.author.name}, você não tem esse pokemon.")
-        elif res == 401:
-          return await ctx.channel.send(f"{ctx.author.name}, você não tem ``{quant}x`` de ``{pokemon['name']}``.")
+          if res == 404:
+            return await ctx.channel.send(f"{ctx.author.name}, você não tem esse pokemon.")
+          elif res == 401:
+            return await ctx.channel.send(f"{ctx.author.name}, você não tem ``{quant}x`` de ``{pokemon['name']}``.")
+
+          await message.add_reaction('✅')
+          return self.release_list.remove(ctx.author.id)
+        else: continue
   @release.error
   async def release_error(self, ctx, error): pass
 
@@ -635,11 +779,12 @@ Mestre Pokémon:
 
   @commands.Cog.listener()
   async def on_reaction_add(self, reaction, user):
-    if user != self.bot.user and str(reaction) == '⬅' or str(reaction) == '➡':
-      if 'AirctunoBot Desenvolvemento#7711' == str(user) or str(reaction.message.embeds[0].color) == '#fc0365': return
+    if user != self.bot.user and str(reaction.emoji) in ['⬅', '➡']:
+      if 'AirctunoBot Desenvolvemento#7711' == str(user) or str(reaction.message.embeds[0].color) not in ['#fc0367', '#fc0366']: return
 
       rare = ''
       color = 0xfc0367
+
       if str(reaction.message.embeds[0].color) == '#fc0366':
         rare = 'rares'
         color = 0xfc0366
@@ -668,10 +813,10 @@ Mestre Pokémon:
 
       if pages == 1: return
 
-      if str(reaction) == '⬅':
+      if str(reaction.emoji) == '⬅':
         page -=  1
         if page < 1: page = pages
-      if str(reaction) == '➡':
+      if str(reaction.emoji) == '➡':
         page +=  1
         if page > pages: page = 1
 
@@ -702,11 +847,12 @@ Mestre Pokémon:
 
   @commands.Cog.listener()
   async def on_reaction_remove(self, reaction, user):
-    if user != self.bot.user and str(reaction) == '⬅' or str(reaction) == '➡':
-      if 'AirctunoBot Desenvolvemento#7711' == str(user) or str(reaction.message.embeds[0].color) == '#fc0365': return
+    if user != self.bot.user and str(reaction.emoji) in ['⬅', '➡']:
+      if 'AirctunoBot Desenvolvemento#7711' == str(user) or str(reaction.message.embeds[0].color) not in ['#fc0367', '#fc0366']: return
 
       rare = ''
       color = 0xfc0367
+
       if str(reaction.message.embeds[0].color) == '#fc0366':
         rare = 'rares'
         color = 0xfc0366
@@ -734,10 +880,10 @@ Mestre Pokémon:
 
       if pages == 1: return
 
-      if str(reaction) == '⬅':
+      if str(reaction.emoji) == '⬅':
         page -=  1
         if page < 1: page = pages
-      if str(reaction) == '➡':
+      if str(reaction.emoji) == '➡':
         page +=  1
         if page > pages: page = 1
 

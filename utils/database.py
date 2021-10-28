@@ -1,12 +1,11 @@
 import os
 import datetime
-from typing import final
 import pytz
 import random
 import certifi
 from pymongo import MongoClient
 from dotenv import load_dotenv, find_dotenv
-from utils.config import all_items, box_ids, price_itens, emojis_conversor, badges, badges_order, classes, chances_pokeball
+from utils.config import *
 
 load_dotenv(find_dotenv())
 database_connection = os.getenv('database_connection')
@@ -39,7 +38,7 @@ async def change_prefix(guildId : int, nPrefix : str):
 async def create_account(guildId : int, id : int):
     collection = db[str(guildId)]
     if not collection.find_one({"_id": id}):
-      collection.insert_one({'_id': id, 'class': 0, 'pokecoins': 100, 'bag': {}, 'pokemons': {}, 'huntlist': {}, 'pokemon_equip': '', 'dailyTime': '', 'pokemonTime': ''})
+      collection.insert_one({'_id': id, 'class': 0, 'pokecoins': 100, 'bag': {}, 'gotInitial': False, 'pokemons': {}, 'huntArea': '', 'huntlist': {}, 'pokemonEquip': '', 'dailyTime': '', 'pokemonTime': ''})
     if not globalusers.find_one({'_id': id}):
       globalusers.insert_one({'_id': id, "badges": ['Betatester']})
 
@@ -70,7 +69,7 @@ async def get_guild_ranking(bot, guildId : int):
   aux = 1
   for i in users:
     user = bot.get_user(i['_id'])
-    content += f"**{aux}. {user.name}**\n Pokemons: {len(i['pokemons'])}\n"
+    content += f"**{aux}. {user.name}**\n Pokedex: {len(i['pokemons'])} / 898\n"
     aux += 1
     if aux > 10: return content
 
@@ -90,7 +89,7 @@ async def add_user_badge(guildId : int, id : int, badge : str):
   user_badges = globalusers.find_one({'_id': id})['badges']
 
   try:
-    badges_order[badge]
+    badges[badge.lower()]
   except:
     return 404
 
@@ -120,7 +119,7 @@ async def get_user_profile(guildId : int, id):
     for i in sort_badges:
       user_badges += f"{badges[i.lower()]}"
 
-  return {'pokecoins': user['pokecoins'], 'pokemons': pokemons, 'ranking': ranking, 'class': classes[user['class']][0], 'badges': user_badges, 'pokemon_equip': user['pokemon_equip']}
+  return {'pokecoins': user['pokecoins'], 'pokemons': pokemons, 'ranking': ranking, 'class': classes[user['class']][0], 'badges': user_badges, 'pokemonEquip': user['pokemonEquip']}
 
 async def get_class_utils(guildId : int, id : int):
   await create_account(guildId, id)
@@ -146,6 +145,22 @@ async def user_class_upgrade(guildId : int, id : int):
   collection.find_one_and_update({'_id':id}, {'$inc': {'class': 1, 'pokecoins': -class_price}})
   return {'code': 200, 'class': classes[user['class']+1][0]}
 
+async def get_pokemon_price(guildId : id, id : id, pokemon, quant):
+  await create_account(guildId, id)
+  collection = db[str(guildId)]
+
+  if await user_has_pokemon(guildId, id, pokemon['name']) == 404:
+    return 404
+
+  user_pokemons = collection.find_one({'_id': id})['pokemons']
+
+  if quant > user_pokemons[pokemon['name']]['quant']:
+    return 401
+
+  price = pokemon_rarity_prices[pokemon['rarity']] * quant
+
+  return price
+
 async def release_pokemon(guildId, id, pokemon, quant, price):
   await create_account(guildId, id)
   collection = db[str(guildId)]
@@ -170,22 +185,22 @@ async def user_equip_pokemon(guildId : int, id : int, pokemon : str):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
-  pokemon_equip = collection.find_one({'_id': id})['pokemon_equip']
+  pokemonEquip = collection.find_one({'_id': id})['pokemonEquip']
 
-  if pokemon_equip == pokemon:
+  if pokemonEquip == pokemon:
     return 400
 
-  collection.find_one_and_update({'_id':id}, {'$set': {'pokemon_equip': pokemon}})
+  collection.find_one_and_update({'_id':id}, {'$set': {'pokemonEquip': pokemon}})
 
 async def user_unequip_pokemon(guildId : int, id : int):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
-  pokemon_equip = collection.find_one({'_id': id})['pokemon_equip']
-  if pokemon_equip == '':
+  pokemonEquip = collection.find_one({'_id': id})['pokemonEquip']
+  if pokemonEquip == '':
     return 404
 
-  collection.find_one_and_update({'_id':id}, {'$set': {'pokemon_equip': ""}})
+  collection.find_one_and_update({'_id':id}, {'$set': {'pokemonEquip': ""}})
 
 async def add_to_huntlist(guildId : int, id : int, pokemon):
   await create_account(guildId, id)
@@ -438,16 +453,12 @@ async def user_has_pokemon(guildId : int, id, pokemonName):
     user_pokemons[pokemonName]
   except:
     return 404
-  else:
-    return 200
 
 async def user_use_pokeball(guildId : int, id : int, pokeball, pokemonRarity : str):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
-  try:
-    pokeball = emojis_conversor[pokeball].capitalize()
-  except: return {'code': 403, 'pokeball': pokeball}
+  pokeball = emojis_conversor[pokeball].capitalize()
 
   user = collection.find_one({'_id': id})
 
@@ -472,23 +483,52 @@ async def user_use_pokeball(guildId : int, id : int, pokeball, pokemonRarity : s
     
   return {'code': None}
 
-async def user_in_cooldown(guildId : int, id : int):
+async def user_starter_pokemon(guildId : int, id : int, pokemonName : str):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
   user = collection.find_one({'_id': id})
+
+  user['pokemons'][f"{pokemonName}"] = {
+    'quant': 1,
+    'rarity': 'common'
+  }
+
+  collection.find_one_and_update({'_id':id}, {'$set': {'pokemons': user['pokemons'], 'gotInitial': True}})
+
+async def user_can_use(guildId : int, id : int):
+  await create_account(guildId, id)
+  collection = db[str(guildId)]
+
+  user = collection.find_one({'_id': id})
+
+  if user['gotInitial'] == False:
+    return {'code': 401}
 
   if user['pokemonTime'] != '':
     final_time = user['pokemonTime'] + datetime.timedelta(seconds=classes[user['class']][1])
     
     if datetime.datetime.now() <= final_time:
       time = final_time.replace(microsecond=0) - datetime.datetime.now().replace(microsecond=0)
-      return {'code': 408, 'time': time}
+      return {'code': 402, 'time': time}
 
   current_time = datetime.datetime.now()
   collection.find_one_and_update({'_id': id}, {'$set': {'pokemonTime': current_time}})
 
   return {'code': 200}
+
+async def users_can_trade(guildId, id1, id2):
+  await create_account(guildId, id1)
+  await create_account(guildId, id2)
+  collection = db[str(guildId)]
+
+  user1 = collection.find_one({'_id': id1})['pokemons']
+  if len(user1) == 0:
+    return 1
+  if id2 != None:
+    user2 = collection.find_one({'_id': id2})['pokemons']
+    if len(user2) == 0:
+      return 2
 
 async def get_daily_bonus(guildId : int, id : int):
   await create_account(guildId, id)
@@ -534,7 +574,10 @@ async def user_trade_with_two_pokemon(guildId : int, tradeOwner : int, tradeUser
   tradeOwner_pokemons = collection.find_one({'_id': tradeOwner})['pokemons']
   tradeUser_pokemons = collection.find_one({'_id': tradeUser})['pokemons']
 
-  tradeOwner_pokemons[pokemon1['name']]['quant'] -= 1
+  try:
+    tradeOwner_pokemons[pokemon1['name']]['quant'] -= 1
+  except:
+    return 404
 
   if tradeOwner_pokemons[pokemon1['name']]['quant'] <= 0:
     del tradeOwner_pokemons[pokemon1['name']]
@@ -547,7 +590,10 @@ async def user_trade_with_two_pokemon(guildId : int, tradeOwner : int, tradeUser
       'rarity': pokemon2['rarity']
     }
 
-  tradeUser_pokemons[pokemon2['name']]['quant'] -= 1
+  try:
+    tradeUser_pokemons[pokemon2['name']]['quant'] -= 1
+  except:
+    return 403
 
   if tradeUser_pokemons[pokemon2['name']]['quant'] <= 0:
     del tradeUser_pokemons[pokemon2['name']]
@@ -560,21 +606,19 @@ async def user_trade_with_two_pokemon(guildId : int, tradeOwner : int, tradeUser
       'rarity': pokemon1['rarity']
     }
 
-  tradeOwner_pokemon_equip = collection.find_one({'_id': tradeOwner})['pokemon_equip']
+  tradeOwner_pokemonEquip = collection.find_one({'_id': tradeOwner})['pokemonEquip']
 
-  tradeUser_pokemon_equip = collection.find_one({'_id': tradeUser})['pokemon_equip']
-
-  try:
-    tradeOwner_pokemons[tradeOwner_pokemon_equip]
-  except: 
-    pokemon_equip1 = ""
-    collection.find_one_and_update({'_id': tradeOwner}, {'$set': {'pokemon_equip': pokemon_equip1}})
+  tradeUser_pokemonEquip = collection.find_one({'_id': tradeUser})['pokemonEquip']
 
   try:
-    tradeUser_pokemons[tradeUser_pokemon_equip]
+    tradeOwner_pokemons[tradeOwner_pokemonEquip]
   except: 
-    pokemon_equip2 = ""
-    collection.find_one_and_update({'_id': tradeUser}, {'$set': {'pokemon_equip': pokemon_equip2}})
+    collection.find_one_and_update({'_id': tradeOwner}, {'$set': {'pokemonEquip': ""}})
+
+  try:
+    tradeUser_pokemons[tradeUser_pokemonEquip]
+  except: 
+    collection.find_one_and_update({'_id': tradeUser}, {'$set': {'pokemonEquip': ""}})
 
   collection.find_one_and_update({'_id': tradeOwner}, {'$set': {'pokemons': tradeOwner_pokemons}})
   collection.find_one_and_update({'_id': tradeUser}, {'$set': {'pokemons': tradeUser_pokemons}})
@@ -587,7 +631,10 @@ async def user_trade_with_one_pokemon(guildId : int, tradeOwner, tradeUser, poke
   tradeOwner_pokemons = collection.find_one({'_id': tradeOwner})['pokemons']
   tradeUser_pokemons = collection.find_one({'_id': tradeUser})['pokemons']
 
-  tradeOwner_pokemons[pokemon['name']]['quant'] -= 1
+  try:
+    tradeOwner_pokemons[pokemon['name']]['quant'] -= 1
+  except:
+    return 404
 
   if tradeOwner_pokemons[pokemon['name']]['quant'] <= 0:
     del tradeOwner_pokemons[pokemon['name']]
@@ -600,13 +647,12 @@ async def user_trade_with_one_pokemon(guildId : int, tradeOwner, tradeUser, poke
       'rarity': pokemon['rarity']
     }
 
-  tradeUser_pokemon_equip = collection.find_one({'_id': tradeUser})['pokemon_equip']
+  tradeUser_pokemonEquip = collection.find_one({'_id': tradeUser})['pokemonEquip']
 
   try:
-    tradeUser_pokemons[tradeUser_pokemon_equip]
-  except: 
-    pokemon_equip = ""
-    collection.find_one_and_update({'_id': tradeUser}, {'$set': {'pokemon_equip': pokemon_equip}})
+    tradeUser_pokemons[tradeUser_pokemonEquip]
+  except:
+    collection.find_one_and_update({'_id': tradeUser}, {'$set': {'pokemonEquip': ""}})
 
   collection.find_one_and_update({'_id': tradeOwner}, {'$set': {'pokemons': tradeOwner_pokemons}})
   collection.find_one_and_update({'_id': tradeUser}, {'$set': {'pokemons': tradeUser_pokemons}})
