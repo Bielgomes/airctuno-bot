@@ -68,11 +68,11 @@ async def pokemon_exists(pokemonSrc):
 async def get_trade_embed(user, member, tradeItem1, tradeItem2):
   embed = discord.Embed(title=f"{member.name}​, o treinador {user.name} quer trocar com você!", color=0xFF003F)
   embed.add_field(name=f"{user.name} recebe", value=f"{tradeItem2['name']}", inline=True)
-  embed.add_field(name=f"{user.name} recebe", value=f"{tradeItem1['name']}", inline=True)
+  embed.add_field(name=f"Você recebe", value=f"{tradeItem1['name']}", inline=True)
 
   embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/898242329620647967/trade.png")
   embed.set_author(name=f"{user.name}", icon_url=f"{user.avatar_url}")
-  embed.set_footer(text='Reaja com ✅ para aceitar')
+  embed.set_footer(text='Reaja com ✅ para aceitar a troca.')
 
   return {'embed': embed}
 
