@@ -66,9 +66,9 @@ emojis_rarity = {
 }
 
 chances_pokeball = {
-  'pokeball': {'ultra-beast': 1, 'legendary': 2, 'mythical': 3, 'rare': 10, 'uncommon': 30, 'common': 40},
-  'greatball': {'ultra-beast': 7, 'legendary': 9, 'mythical': 15, 'rare': 40, 'uncommon': 65, 'common': 75},
-  'ultraball': {'ultra-beast': 12, 'legendary': 15, 'mythical': 20, 'rare': 60, 'uncommon': 80, 'common': 90}
+  'pokeball': {'ultra-beast': 10, 'legendary': 10, 'mythical': 15, 'rare': 20, 'uncommon': 35, 'common': 50},
+  'greatball': {'ultra-beast': 15, 'legendary': 15, 'mythical': 20, 'rare': 40, 'uncommon': 65, 'common': 75},
+  'ultraball': {'ultra-beast': 20, 'legendary': 20, 'mythical': 25, 'rare': 60, 'uncommon': 80, 'common': 90}
 }
 
 items_ordem = ['Pokeball', 'Greatball', 'Ultraball', 'Masterball', 'Cb', 'Ub', 'Rb', 'Mb']
