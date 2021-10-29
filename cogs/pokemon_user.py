@@ -61,7 +61,7 @@ basta reagir com eles para ver as opções de pokémon! e então escolhê-lo com
         
         while True:
           try:
-            reaction, user = await self.bot.wait_for('reaction_add', timeout=60.0, check=check)
+            reaction, user = await self.bot.wait_for('reaction_add', timeout=120.0, check=check)
           except asyncio.TimeoutError:
             return self.user_list.remove(ctx.author.id)
           else:
@@ -83,8 +83,7 @@ basta reagir com eles para ver as opções de pokémon! e então escolhê-lo com
         pages = 3
 
         embed = discord.Embed(title=f"O que você acha dele?", description=f'''
-        **```O {starter_pokemons[gen][page][0]} é um belo pokémon de tipo {starter_pokemons[gen][page][2]}! você quer ele?```**
-        ''', color=0x524D68)
+        **```O {starter_pokemons[gen][page][0]} é um belo pokémon de tipo {starter_pokemons[gen][page][2]}! você quer ele?```**''', color=0x524D68)
         embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
         embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
         embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{starter_pokemons[gen][1][1]}.png")
@@ -102,7 +101,7 @@ basta reagir com eles para ver as opções de pokémon! e então escolhê-lo com
 
         while True:
           try:
-            reaction, user = await self.bot.wait_for("reaction_add", timeout=60.0, check=check)
+            reaction, user = await self.bot.wait_for("reaction_add", timeout=120.0, check=check)
           except asyncio.TimeoutError:
             return self.user_list.remove(ctx.author.id)
           else:
@@ -116,7 +115,7 @@ basta reagir com eles para ver as opções de pokémon! e então escolhê-lo com
 Colete todos os Pokémons que puder e se torne o melhor treinador da sua Região.
 
 Te desejo boa sorte!```**
-              Caso não esteja familiarizado com os comandos eu irei te ajudar no $help.
+              Caso não esteja familiarizado com os comandos eu irei te ajudar no comando: help.
               ''', color=0x524D68)
               embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
               embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
@@ -136,8 +135,7 @@ Te desejo boa sorte!```**
             await reaction.remove(user)
 
             embed = discord.Embed(title=f"O que você acha dele?", description=f'''
-            **```O {starter_pokemons[gen][page][0]} é um belo pokémon de tipo {starter_pokemons[gen][page][2]}! você quer ele?```**
-            ''', color=0x524D68)
+            **```O {starter_pokemons[gen][page][0]} é um belo pokémon de tipo {starter_pokemons[gen][page][2]}! você quer ele?```**''', color=0x524D68)
             embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
             embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
             embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{starter_pokemons[gen][page][1]}.png")
@@ -597,7 +595,7 @@ Te desejo boa sorte!```**
     if res['code'] == 401:
       return await ctx.channel.send(f"{ctx.author.name}, você está no nivel máximo.")
 
-    msg = await ctx.channel.send(f"<:resource_in_beta:896230169054965760>{ctx.author.name}, você quer gastar ``{res['class_price']}`` pokecoins para passar de classe.")
+    msg = await ctx.channel.send(f"{ctx.author.name}, você quer gastar **{res['class_price']}** pokecoins para subir de classe.")
     await msg.add_reaction('✅')
 
     def check(reaction, user):
