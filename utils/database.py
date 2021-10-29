@@ -25,8 +25,8 @@ async def get_prefix(bot, ctx):
     return prefix
   else:
     collection = db.create_collection(guildId)
-    collection.insert_one({"_id": 0, "prefix": "$"})
-    return '$'
+    collection.insert_one({"_id": 0, "prefix": "!"})
+    return '!'
 
 async def change_prefix(guildId : int, nPrefix : str):
   collection = db[str(guildId)]
