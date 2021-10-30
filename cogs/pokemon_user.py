@@ -15,6 +15,7 @@ class Pokemon_user(commands.Cog):
       self.bot = bot
       self.user_list = []
       self.release_list = []
+      self.classupgrade_list = []
 
   @commands.cooldown(1, 2, commands.BucketType.guild)
   @commands.command(aliases=['p', 'pm'])
@@ -22,12 +23,11 @@ class Pokemon_user(commands.Cog):
     res = await user_can_use(ctx.guild.id, ctx.author.id)
 
     if res['code'] == 401:
-      async def start(isIn = None):
+      async def start(msg, isIn = None):
         if isIn == True:
           if ctx.author.id in self.user_list: return
         if ctx.author.id not in self.user_list:
           self.user_list.append(ctx.author.id)
-
         if isIn == True:
           embed = discord.Embed(title=f"Olá {ctx.author.name}, não vi você chegar!", description=f'''
 **```
@@ -45,8 +45,11 @@ basta reagir com eles para ver as opções de pokémon! e então escolhê-lo com
         embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
         embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
 
-        msg = await ctx.channel.send(embed=embed)
-        
+        if msg == None:
+          msg = await ctx.channel.send(embed=embed)
+        else:
+          await msg.edit(embed=embed)
+
         await msg.add_reaction("1️⃣")
         await msg.add_reaction("2️⃣")
         await msg.add_reaction("3️⃣")
@@ -63,6 +66,11 @@ basta reagir com eles para ver as opções de pokémon! e então escolhê-lo com
           try:
             reaction, user = await self.bot.wait_for('reaction_add', timeout=120.0, check=check)
           except asyncio.TimeoutError:
+            await msg.clear_reactions()
+            embed = discord.Embed(description=f"**```{ctx.author.name}, você não está pronto ainda? tudo bem! volte aqui quando se sentir preparado para a aventura.```**", color=0x524D68)
+            embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
+            embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
+            await msg.edit(embed=embed)
             return self.user_list.remove(ctx.author.id)
           else:
             if str(reaction.emoji) == '1️⃣': gen = 1
@@ -75,12 +83,11 @@ basta reagir com eles para ver as opções de pokémon! e então escolhê-lo com
             elif str(reaction.emoji) == '8️⃣': gen = 8
             else: continue
 
-            await msg.delete()
-            return gen
+            await msg.clear_reactions()
+            return msg, gen
 
-      async def final(gen):
+      async def final(msg, gen):
         page = 1
-        pages = 3
 
         embed = discord.Embed(title=f"O que você acha dele?", description=f'''
         **```O {starter_pokemons[gen][page][0]} é um belo pokémon de tipo {starter_pokemons[gen][page][2]}! você quer ele?```**''', color=0x524D68)
@@ -89,7 +96,7 @@ basta reagir com eles para ver as opções de pokémon! e então escolhê-lo com
         embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{starter_pokemons[gen][1][1]}.png")
         embed.set_footer(text=f"Page {page} / 3")
 
-        msg = await ctx.channel.send(embed=embed)
+        await msg.edit(embed=embed)
         
         await msg.add_reaction("⬅")
         await msg.add_reaction("➡")
@@ -103,6 +110,11 @@ basta reagir com eles para ver as opções de pokémon! e então escolhê-lo com
           try:
             reaction, user = await self.bot.wait_for("reaction_add", timeout=120.0, check=check)
           except asyncio.TimeoutError:
+            await msg.clear_reactions()
+            embed = discord.Embed(description=f"**```{ctx.author.name}, você não está pronto ainda? tudo bem! volte aqui quando se sentir preparado para a aventura.```**", color=0x524D68)
+            embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
+            embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
+            await msg.edit(embed=embed)
             return self.user_list.remove(ctx.author.id)
           else:
             if str(reaction.emoji) == '✅':
@@ -122,14 +134,14 @@ Te desejo boa sorte!```**
               embed.set_image(url=f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{starter_pokemons[gen][page][1]}.png")
               return await msg.edit(embed=embed)
             elif str(reaction.emoji) == '🔄':
-              await msg.delete()
-              return True
+              await msg.clear_reactions()
+              return msg, True
             elif str(reaction.emoji) == '⬅':
               page -= 1
-              if page < 1: page = pages
+              if page < 1: page = 3
             elif str(reaction.emoji) == '➡':
               page += 1
-              if page > pages: page = 1
+              if page > 3: page = 1
             else: continue
 
             await reaction.remove(user)
@@ -145,10 +157,10 @@ Te desejo boa sorte!```**
       
       i = 0
       while True:
-        if i == 0: gen = await start(True)
-        else: gen = await start()
-        i = await final(gen)
-        if i != True:return
+        if i == 0: msg, gen = await start(None, True)
+        else: msg, gen = await start(msg)
+        msg, i = await final(msg, gen)
+        if i != True: return
 
     if res['code'] == 402:
       return await ctx.channel.send(f"{ctx.author.name}, aguarde `{res['time']}` para buscar pokemons novamente.")
@@ -590,27 +602,42 @@ Te desejo boa sorte!```**
   @commands.cooldown(1, 2, commands.BucketType.guild)
   @commands.command(aliases=['clup', 'upgrade', 'up'])
   async def classupgrade(self, ctx):
-    res = await get_class_utils(ctx.guild.id, ctx.author.id)
+    if ctx.author.id in self.classupgrade_list: return
+
+    res = await get_class_price(ctx.guild.id, ctx.author.id)
 
     if res['code'] == 401:
       return await ctx.channel.send(f"{ctx.author.name}, você está no nivel máximo.")
-
-    msg = await ctx.channel.send(f"{ctx.author.name}, você quer gastar **{res['class_price']}** pokecoins para subir de classe.")
-    await msg.add_reaction('✅')
-
-    def check(reaction, user):
-        return user != self.bot.user and user == ctx.author and str(reaction) == '✅' and msg.id == reaction.message.id
-
-    await self.bot.wait_for("reaction_add", timeout=20.0, check=check)
-
-    res = await user_class_upgrade(ctx.guild.id, ctx.author.id)
-
     if res['code'] == 400:
       return await ctx.channel.send(f"{ctx.author.name}, você não tem pokecoins o suficiente.")
-    elif res['code'] == 401:
-      return await ctx.channel.send(f"{ctx.author.name}, você está no nivel máximo.")
 
-    await ctx.channel.send(f"{ctx.author.name}, parabéns! agora você está na classe ``{res['class']}``.")
+    self.classupgrade_list.append(ctx.author.id)
+
+    await ctx.channel.send(f"{ctx.author.name}, para subir de classe serão gastos **{res['class_price']}** pokecoins, digite(confirm/n) para aceitar ou cancelar o upgrade.")
+
+    def check(message):
+      return message.author == ctx.author
+
+    while True:
+      try:
+        message = await self.bot.wait_for("message", timeout=10.0, check=check)
+      except:
+        return self.classupgrade_list.remove(ctx.author.id)
+      else:
+        if message.author == self.bot.user:
+          continue
+        if message.content.lower() == 'n':
+          self.classupgrade_list.remove(ctx.author.id)
+          return await ctx.channel.send(f"{ctx.author.name}, upgrade cancelado.")
+        elif message.content.lower() == 'confirm':
+          res = await user_class_upgrade(ctx.guild.id, ctx.author.id)
+
+          self.classupgrade_list.remove(ctx.author.id)
+
+          if res['code'] == 400:
+            return await ctx.channel.send(f"{ctx.author.name}, você não tem pokecoins o suficiente.")
+
+          return await ctx.channel.send(f"{ctx.author.name}, agora você está na classe **{res['class']}**.")
   @classupgrade.error
   async def classupgrade_error(self, ctx, error): pass
 
@@ -650,7 +677,6 @@ Te desejo boa sorte!```**
         return self.release_list.remove(ctx.author.id)
       else:
         if message.author == self.bot.user:
-          print("Bot message")
           continue
         if message.content.lower() == 'n':
           self.release_list.remove(ctx.author.id)

@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 
+from utils.database import get_prefix
+
 class Events(commands.Cog):
 
   def __init__(self, bot):
@@ -32,7 +34,7 @@ pokémon = nome ou id
 ```
 Por padrão o prefixo regional é "!", mas os administradores podem muda-lo.
 ```
-Se você não sabe o prefixo, por favor consulte alguém do servidor.
+Se você não sabe o prefixo, basta marcar o bot em um chat e eu irei te mostrar.
 
 __🎁DAILY:__
 ```
@@ -187,11 +189,12 @@ Protótipo: !huntremove [pokémon]
 
 COMANDOS DE ADMINISTRADOR
 
-__🎉PREFIX:__
+__🎉CHANGEPREFIX:__
+SINÔNIMOS: pf, changep
 ```
 O comando prefix seta um prefixo novo ao bot na sua região.
 
-Protótipo: !prefix [prefixo]
+Protótipo: !changeprefix [prefixo]
 ```
 
 Muito bem! agora que aprendeu tudo você está pronto para ir em sua jornada e se tornar o melhor Mestre Pokémon.**
@@ -207,6 +210,13 @@ O Professor Ednaldo te deseja boa sorte!
       await ctx.channel.send(f"{ctx.author.name}, para receber essa mensagem você precisa liberar sua DM.")
   @help.error
   async def help_error(self, ctx, error): pass
+
+  @commands.Cog.listener()
+  async def on_message(self, message):
+    if message.content == f"<@!{self.bot.user.id}>":
+      embed = discord.Embed(description=f"**```Olá Treinador, vejo que está perdido.\n\nO prefixo dessa região é {await get_prefix(self.bot, message)}```**", color=0x524D68)
+      embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
+      await message.channel.send(embed=embed)
 
   @commands.Cog.listener()
   async def on_command_error(self, ctx, error):

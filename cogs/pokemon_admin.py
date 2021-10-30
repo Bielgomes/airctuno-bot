@@ -153,15 +153,15 @@ class Pokemon_admin(commands.Cog):
 
   @commands.cooldown(1, 2, commands.BucketType.user)
   @commands.has_permissions(ban_members=True)
-  @commands.command(aliases=['pf'])
-  async def prefix(self, ctx, prefix : str = None):
+  @commands.command(aliases=['pf', 'changep'])
+  async def changeprefix(self, ctx, prefix : str = None):
     if prefix != None:
       res = await change_prefix(ctx.guild.id, prefix)
       if res == 400:
-        return await ctx.channel.send(f"Esse prefix é ``igual`` ao anterior.")
-      return await ctx.channel.send(f"Prefix regional alterado para ``{prefix}``.")
-  @prefix.error
-  async def prefix_error(self, ctx, error): pass
+        return await ctx.channel.send(f"{ctx.author.name}, esse prefixo é **igual** ao anterior.")
+      return await ctx.channel.send(f"{ctx.author.name}, prefixo regional alterado para ``{prefix}``.")
+  @changeprefix.error
+  async def changeprefix_error(self, ctx, error): pass
 
 def setup(bot):
   bot.add_cog(Pokemon_admin(bot))

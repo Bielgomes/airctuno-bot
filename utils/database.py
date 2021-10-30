@@ -121,7 +121,7 @@ async def get_user_profile(guildId : int, id):
 
   return {'pokecoins': user['pokecoins'], 'pokemons': pokemons, 'ranking': ranking, 'class': classes[user['class']][0], 'badges': user_badges, 'pokemonEquip': user['pokemonEquip']}
 
-async def get_class_utils(guildId : int, id : int):
+async def get_class_price(guildId : int, id : int):
   await create_account(guildId, id)
   collection = db[str(guildId)]
 
@@ -129,14 +129,16 @@ async def get_class_utils(guildId : int, id : int):
 
   if user['class'] == 12: return {'code': 401}
 
-  return {'code': 200, 'class_price': classes[user['class']][2]}
+  class_price = classes[user['class']][2]
+
+  if class_price > user['pokecoins']: return {'code': 400}
+
+  return {'code': 200, 'class_price': class_price}
 
 async def user_class_upgrade(guildId : int, id : int):
   collection = db[str(guildId)]
 
   user = collection.find_one({'_id': id})
-
-  if user['class'] == 12: return {'code': 401}
 
   class_price = classes[user['class']][2]
 
