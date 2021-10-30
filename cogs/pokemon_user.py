@@ -394,9 +394,9 @@ Te desejo boa sorte!```**
     if res == 404:
       return await ctx.channel.send(f"{ctx.author.name}, o item especificado é invalido.")
     elif res == 507:
-      return await ctx.channel.send(f"{ctx.author.name}, você não tem dinheiro o suficiente.")
+      return await ctx.channel.send(f"{ctx.author.name}, você não tem pokecoins o suficiente.")
     else:
-      await ctx.channel.send(f"{ctx.author.name}, comprados **{quant}x de {itemName}**.")
+      await ctx.channel.send(f"{ctx.author.name}, **{quant}x de {itemName}** foram comprados.")
   @buy.error
   async def buy_error(self, ctx, error): pass
 
