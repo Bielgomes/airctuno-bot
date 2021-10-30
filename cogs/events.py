@@ -214,7 +214,7 @@ O Professor Ednaldo te deseja boa sorte!
   @commands.Cog.listener()
   async def on_message(self, message):
     if message.content == f"<@!{self.bot.user.id}>":
-      embed = discord.Embed(description=f"**```Olá Treinador, vejo que está perdido.\n\nO prefixo dessa região é {await get_prefix(self.bot, message)}```**", color=0x524D68)
+      embed = discord.Embed(description=f'''**```Olá Treinador, vejo que está perdido.\n\nO prefixo do bot nessa região é "{await get_prefix(self.bot, message)}"```**''', color=0x524D68)
       embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
       await message.channel.send(embed=embed)
 
