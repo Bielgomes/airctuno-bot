@@ -23,12 +23,14 @@ class Pokemon_user(commands.Cog):
     res = await user_can_use(ctx.guild.id, ctx.author.id)
 
     if res['code'] == 401:
-      async def start(msg, isIn = None):
-        if isIn == True:
+      async def start(msg):
+        if msg == None:
           if ctx.author.id in self.user_list: return
+
         if ctx.author.id not in self.user_list:
           self.user_list.append(ctx.author.id)
-        if isIn == True:
+          
+        if msg == None:
           embed = discord.Embed(title=f"Olá {ctx.author.name}, não vi você chegar!", description=f'''
 **```
 Eu sou o Professor Ednaldo, aparentemente você é novo por aqui não é mesmo?
@@ -157,7 +159,7 @@ Te desejo boa sorte!```**
       
       i = 0
       while True:
-        if i == 0: msg, gen = await start(None, True)
+        if i == 0: msg, gen = await start(None)
         else: msg, gen = await start(msg)
         msg, i = await final(msg, gen)
         if i != True: return
@@ -372,9 +374,9 @@ Te desejo boa sorte!```**
     embed = discord.Embed(title='Bem-vindo a loja', color=0xFF99CD)
     embed.set_author(name=f"{ctx.author.name}", icon_url=f"{ctx.author.avatar_url}")
     embed.set_thumbnail(url='https://media.discordapp.net/attachments/887158781832749086/889254271957221376/bolsa-de-compras.png')
-    embed.add_field(name=f"{all_emojis['pokeball']}Pokeball", value=f"{price_itens['Pokeball']}", inline=True)
-    embed.add_field(name=f"{all_emojis['greatball']}Greatball", value=f"{price_itens['Greatball']}", inline=True)
-    embed.add_field(name=f"{all_emojis['ultraball']}Ultraball", value=f"{price_itens['Ultraball']}", inline=True)
+    embed.add_field(name=f"{all_emojis['pokeball']}Pokeball", value=f"{price_itens['Pokeball']}$", inline=True)
+    embed.add_field(name=f"{all_emojis['greatball']}Greatball", value=f"{price_itens['Greatball']}$", inline=True)
+    embed.add_field(name=f"{all_emojis['ultraball']}Ultraball", value=f"{price_itens['Ultraball']}$", inline=True)
     embed.set_footer(text='Use $buy Nome Quantidade para comprar')
     await ctx.channel.send(embed=embed)
   @pokeshop.error
@@ -613,7 +615,7 @@ Te desejo boa sorte!```**
 
     self.classupgrade_list.append(ctx.author.id)
 
-    await ctx.channel.send(f"{ctx.author.name}, para subir de classe serão gastos **{res['class_price']}** pokecoins, digite(confirm/n) para aceitar ou cancelar o upgrade.")
+    await ctx.channel.send(f"{ctx.author.name}, para subir de classe serão gastos **{res['class_price']} pokecoins**, digite(confirm/n) para aceitar ou cancelar o upgrade.")
 
     def check(message):
       return message.author == ctx.author

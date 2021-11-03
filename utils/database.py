@@ -67,8 +67,9 @@ async def get_guild_ranking(bot, guildId : int):
 
   content = ''
   aux = 1
+  
   for i in users:
-    user = bot.get_user(i['_id'])
+    user = await bot.fetch_user(i['_id'])
     content += f"**{aux}. {user.name}**\n Pokedex: {len(i['pokemons'])} / 898\n"
     aux += 1
     if aux > 10: return content

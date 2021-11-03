@@ -218,6 +218,8 @@ O Professor Ednaldo te deseja boa sorte!
       embed.set_thumbnail(url="https://media.discordapp.net/attachments/887158781832749086/901583410294841354/Professor_Ednaldo.png")
       await message.channel.send(embed=embed)
 
+    await self.bot.process_commands(message)
+
   @commands.Cog.listener()
   async def on_command_error(self, ctx, error):
     if isinstance(error, commands.MissingPermissions):
