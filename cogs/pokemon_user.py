@@ -853,7 +853,7 @@ Mestre Pokémon:
       content = ''
       actually_rarity = ''
 
-      aux = 1
+      aux = 0
       for i in user_pokemons:
         rarity = user_pokemons[i]['rarity']
         if rare == 'rares':
@@ -920,7 +920,7 @@ Mestre Pokémon:
       content = ''
       actually_rarity = ''
 
-      aux = 1
+      aux = 0
       for i in user_pokemons:
         rarity = user_pokemons[i]['rarity']
         if rare == 'rares':
