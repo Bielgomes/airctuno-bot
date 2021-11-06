@@ -706,91 +706,82 @@ Treinador novato:
 ```
   Preço: -
   Cooldown no P: 30 minutos
-  Tamanho da Huntlist: 3
 ```
 Treinador novato II:
 ```
-  Preço: 1000 pokecoins
+  Preço: 1.000 pokecoins
   Cooldown no P: 28,5 minutos
-  Tamanho da Huntlist: 3
-  Chance de captura base + 1
+  Chance de captura base + 1%
 ```
 Treinador novato III:
 ```
-  Preço: 2000 pokecoins
+  Preço: 2.000 pokecoins
   Cooldown no P: 27 minutos
-  Tamanho da Huntlist: 3
-  Chance de captura base + 1
+  Chance de captura base + 1%
 ```
 Treinador:
 ```
-  Preço: 3000 pokecoins
+  Preço: 3.000 pokecoins
   Cooldown no P: 25,5 minutos
-  Tamanho da Huntlist: 4
-  Chance de captura base + 1
+  Tamanho da Huntlist: + 1
+  Chance de captura base + 1%
 ```
 Treinador II:
 ```
-  Preço: 4000 pokecoins
+  Preço: 4.000 pokecoins
   Cooldown no P: 24 minutos
-  Tamanho da Huntlist: 4
-  Chance de captura base + 1
+  Chance de captura base + 1%
 ```
 Treinador III:
 ```
-  Preço: 5000 pokecoins
+  Preço: 5.000 pokecoins
   Cooldown no P: 22,5 minutos
-  Tamanho da Huntlist: 4
-  Chance de captura base + 1
+  Chance de captura base + 1%
 ```
 Treinador de Elite:
 ```
-  Preço: 6000 pokecoins
+  Preço: 6.000 pokecoins
   Cooldown no P: 21 minutos
-  Tamanho da Huntlist: 5
-  Chance de captura base + 1
+  Tamanho da Huntlist: + 1
+  Chance de captura base + 1%
 ```
 Treinador de Elite II:
 ```
-  Preço: 7000 pokecoins
+  Preço: 7.000 pokecoins
   Cooldown no P: 19,5 minutos
-  Tamanho da Huntlist: 5
-  Chance de captura base + 1
+  Chance de captura base + 1%
 ```
 Treinador de Elite III:
 ```
-  Preço: 8000 pokecoins
+  Preço: 8.000 pokecoins
   Cooldown no P: 18 minutos
-  Tamanho da Huntlist: 5
-  Chance de captura base + 1
+  Chance de captura base + 1%
 ```
 Professor Pokémon:
 ```
-  Preço: 9000 pokecoins
+  Preço: 9.000 pokecoins
   Cooldown no P: 16,5 minutos
-  Tamanho da Huntlist: 6
-  Chance de captura base + 1
+  Tamanho da Huntlist: + 1
+  Chance de captura base + 1%
 ```
 Professor Pokémon II:
 ```
-  Preço: 10000 pokecoins
+  Preço: 10.000 pokecoins
   Cooldown no P: 15 minutos
-  Tamanho da Huntlist: 6
-  Chance de captura base + 1
+  Chance de captura base + 1%
 ```
 Professor Pokémon III:
 ```
-  Preço: 11000 pokecoins
+  Preço: 11.000 pokecoins
   Cooldown no P: 13,5 minutos
-  Tamanho da Huntlist: 6
-  Chance de captura base + 1
+  Chance de captura base + 1%
 ```
 Mestre Pokémon:
 ```
-  Preço: 12000 pokecoins
+  Preço: 12.000 pokecoins
   Cooldown no P: 10 minutos
-  Tamanho da Huntlist: 7
-  Chance de captura base + 1
+  Tamanho da Huntlist: + 1
+  Chance de captura base + 1%
 ```
 **
     ''', color=0xE56BFF)
