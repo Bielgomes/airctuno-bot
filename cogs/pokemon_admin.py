@@ -1,10 +1,13 @@
 import discord
 from discord.ext import commands
-import asyncio
+
 from utils.database import *
 from utils.api import *
 from utils.utils import *
 from utils.config import emojis_pokeball
+
+import asyncio
+import os
 
 class Pokemon_admin(commands.Cog):
 
