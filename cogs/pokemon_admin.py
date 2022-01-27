@@ -12,6 +12,19 @@ class Pokemon_admin(commands.Cog):
     self.bot = bot
 
   @commands.is_owner()
+  @commands.command()
+  async def unload(ctx, extension):
+    self.bot.unload_extension(f"cogs.{extension}")
+
+  @commands.is_owner()
+  @commands.command()
+  async def reload(ctx):
+    for filename in os.listdir("./cogs"):
+      if filename.endswith(".py"):
+        self.bot.unload_extension(f"cogs.{filename[:-3]}")
+        self.bot.load_extension(f"cogs.{filename[:-3]}")
+    
+  @commands.is_owner()
   @commands.command(aliases=['sp'])
   async def spawn(self, ctx, pokemonSrc = None):
     pokemon =  await pokemon_exists(pokemonSrc)
