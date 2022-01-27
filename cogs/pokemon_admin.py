@@ -16,12 +16,12 @@ class Pokemon_admin(commands.Cog):
 
   @commands.is_owner()
   @commands.command()
-  async def unload(ctx, extension):
+  async def unload(self, ctx, extension):
     self.bot.unload_extension(f"cogs.{extension}")
 
   @commands.is_owner()
   @commands.command()
-  async def reload(ctx):
+  async def reload(self, ctx):
     for filename in os.listdir("./cogs"):
       if filename.endswith(".py"):
         self.bot.unload_extension(f"cogs.{filename[:-3]}")
