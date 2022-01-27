@@ -18,19 +18,6 @@ bot.remove_command("help")
 async def load(ctx, extension):
   bot.load_extension(f"cogs.{extension}")
 
-@commands.has_permissions(ban_members=True)
-@bot.command()
-async def unload(ctx, extension):
-  bot.unload_extension(f"cogs.{extension}")
-
-@commands.has_permissions(ban_members=True)
-@bot.command()
-async def reload(ctx):
-  for filename in os.listdir("./cogs"):
-    if filename.endswith(".py"):
-      bot.unload_extension(f"cogs.{filename[:-3]}")
-      bot.load_extension(f"cogs.{filename[:-3]}")
-
 for i in os.listdir('./cogs'):
   if str(i) in ['__pycache__']:
     pass
