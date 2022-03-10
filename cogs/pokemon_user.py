@@ -377,6 +377,7 @@ Te desejo boa sorte!```**
     embed.add_field(name=f"{all_emojis['pokeball']}Pokeball", value=f"{price_itens['Pokeball']}$", inline=True)
     embed.add_field(name=f"{all_emojis['greatball']}Greatball", value=f"{price_itens['Greatball']}$", inline=True)
     embed.add_field(name=f"{all_emojis['ultraball']}Ultraball", value=f"{price_itens['Ultraball']}$", inline=True)
+    embed.add_field(name=f"{all_emojis['masterball']}Ultraball", value=f"{price_itens['Masterball']}$", inline=True)
     embed.set_footer(text='Use $buy Nome Quantidade para comprar')
     await ctx.channel.send(embed=embed)
   @pokeshop.error

@@ -96,7 +96,8 @@ box_images = {
 price_itens = {
   'Pokeball': 10,
   'Greatball': 50,
-  'Ultraball': 100
+  'Ultraball': 100,
+  'Masterball': 5250,
 }
 
 classes = {
