@@ -46,10 +46,10 @@ starter_pokemons = {
 pokemon_rarity = ['ultra-beast', 'legendary', 'mythical', 'rare', 'uncommon', 'common']
 
 pokemon_rarity_prices = {
-  'ultra-beast': 4000,
-  'legendary': 1000,
-  'mythical': 450,
-  'rare': 100,
+  'ultra-beast': 6000,
+  'legendary': 4000,
+  'mythical': 2500,
+  'rare': 890,
   'uncommon': 50,
   'common': 25
 }
@@ -110,8 +110,8 @@ classes = {
   6: ['Treinador de Elite', 1260.0, 7000, 5],
   7: ['Treinador de Elite II', 1170.0, 8000, 5],
   8: ['Treinador de Elite III', 1080.0, 9000, 5],
-  9: ['Professor Pokémon', 990.0, 10000, 6],
-  10: ['Professor Pokémon II', 900.0, 11000, 6],
-  11: ['Professor Pokémon III', 810.0, 12000, 6],
-  12: ['Mestre Pokémon', 720.0, 0, 8]
+  9: ['Professor Pokémon', 990.0, 10000, 8],
+  10: ['Professor Pokémon II', 810.0, 11000, 8],
+  11: ['Professor Pokémon III', 720.0, 12000, 8],
+  12: ['Mestre Pokémon', 600.0, 0, 12]
 }

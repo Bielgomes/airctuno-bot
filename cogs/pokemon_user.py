@@ -762,26 +762,26 @@ Professor Pokémon:
 ```
   Preço: 9.000 pokecoins
   Cooldown no P: 16,5 minutos
-  Tamanho da Huntlist: + 1
+  Tamanho da Huntlist: + 2
   Chance de captura base + 1%
 ```
 Professor Pokémon II:
 ```
   Preço: 10.000 pokecoins
-  Cooldown no P: 15 minutos
+  Cooldown no P: 13,5 minutos
   Chance de captura base + 1%
 ```
 Professor Pokémon III:
 ```
   Preço: 11.000 pokecoins
-  Cooldown no P: 13,5 minutos
+  Cooldown no P: 12 minutos
   Chance de captura base + 1%
 ```
 Mestre Pokémon:
 ```
   Preço: 12.000 pokecoins
   Cooldown no P: 10 minutos
-  Tamanho da Huntlist: + 1
+  Tamanho da Huntlist: + 4
   Chance de captura base + 1%
 ```
 **
