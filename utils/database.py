@@ -470,11 +470,11 @@ async def user_can_use(guildId : int, id : int):
   if user['pokemonTime'] != '':
     final_time = user['pokemonTime'] + datetime.timedelta(seconds=classes[user['class']][1])
     
-    if datetime.datetime.now(pytz.timezone('America/Santarem')) <= final_time:
-      time = final_time.replace(microsecond=0) - datetime.datetime.now(pytz.timezone('America/Santarem')).replace(microsecond=0)
+    if datetime.datetime.now() <= final_time:
+      time = final_time.replace(microsecond=0) - datetime.datetime.now().replace(microsecond=0)
       return {'code': 402, 'time': time}
 
-  current_time = datetime.datetime.now(pytz.timezone('America/Santarem'))
+  current_time = datetime.datetime.now()
   collection.find_one_and_update({'_id': id}, {'$set': {'pokemonTime': current_time}})
 
   return {'code': 200}
