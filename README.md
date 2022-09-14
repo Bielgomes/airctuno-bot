@@ -1,8 +1,14 @@
-# Pokemon-Bot-Discordpy
+# AirctunoBot
+AirctunoBot é um bot do discord feito em python que possibilita capturar pokemons.
 
-Um bot feito em alguns meses como um desafio!
-Ele não está polido, ao contrario, tem muitas redundancias e erros de lógica.
+## Funcionalidades
+- Capturar pokemons;
+- Trocar pokemons;
+- Chances de captura e spawn de pokemons por raridade;
+- Venda de pokemons.
 
-Resumindo, está incompleto e mal otimizado.
+## Tecnologias Utilizadas
+Discord.py
 
-API: https://github.com/Aldovani/pokemon-api
+## API consumida pelo bot
+<a href="https://github.com/Aldovani/pokemon-api">Acesse</a>
